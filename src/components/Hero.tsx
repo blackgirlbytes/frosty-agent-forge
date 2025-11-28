@@ -27,17 +27,35 @@ export const Hero = () => {
     setSnowflakes(flakes);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
     
     setIsSubmitting(true);
-    // Simulate API call
-    setTimeout(() => {
-      toast.success("You're on the list! We'll notify you when challenges unlock.");
-      setEmail("");
+    
+    try {
+      const response = await fetch('/api/notify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        toast.success("You're on the list! Check your inbox for confirmation.");
+        setEmail("");
+      } else {
+        toast.error(data.message || "Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+      toast.error("Failed to sign up. Please try again.");
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (
