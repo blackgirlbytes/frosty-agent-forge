@@ -16,7 +16,7 @@ export const ChallengeCalendar = () => {
             Your Advent Calendar
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            17 challenges unlock each weekday from December 1-24. Build your AI agent expertise day by day.
+            Unlock 17 challenges each weekday from December 1-24. Build your AI agent expertise through hands-on projects.
           </p>
         </div>
 
