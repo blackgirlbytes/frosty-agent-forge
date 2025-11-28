@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "signups:view": "tsx scripts/view-signups.ts",
+    "signups:export": "tsx scripts/view-signups.ts --export",
+    "notify:send": "tsx scripts/send-notification.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -37,6 +40,8 @@
     "@radix-ui/react-toggle": "^1.1.9",
     "@radix-ui/react-toggle-group": "^1.1.10",
     "@radix-ui/react-tooltip": "^1.2.7",
+    "@sendgrid/client": "^8.1.6",
+    "@sendgrid/mail": "^8.1.6",
     "@tanstack/react-query": "^5.83.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

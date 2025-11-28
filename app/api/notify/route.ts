@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import sgMail from '@sendgrid/mail';
-import sgClient from '@sendgrid/client';
+import { createSignup, hasEmailSignedUp } from '@/lib/db';
 
 // Email validation regex
 const EMAIL_REGEX = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
@@ -10,49 +10,6 @@ const EMAIL_REGEX = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
  */
 function validateEmail(email: string): boolean {
   return EMAIL_REGEX.test(email);
-}
-
-/**
- * Add contact to SendGrid list
- */
-async function addToContactList(email: string): Promise<boolean> {
-  const sendgridApiKey = process.env.SENDGRID_API_KEY;
-  const listId = process.env.SENDGRID_LIST_ID;
-  
-  if (!sendgridApiKey) {
-    throw new Error('SENDGRID_API_KEY not configured');
-  }
-
-  if (!listId) {
-    throw new Error('SENDGRID_LIST_ID not configured');
-  }
-
-  sgClient.setApiKey(sendgridApiKey);
-
-  console.log('📋 Adding contact to SendGrid list:', email);
-
-  const data = {
-    list_ids: [listId],
-    contacts: [
-      {
-        email: email,
-      }
-    ]
-  };
-
-  try {
-    const [response] = await sgClient.request({
-      url: '/v3/marketing/contacts',
-      method: 'PUT',
-      body: data
-    });
-
-    console.log('✅ Contact added successfully');
-    return true;
-  } catch (error: any) {
-    console.error('❌ SendGrid Contact API Error:', error.response?.body || error);
-    throw new Error(`Failed to add contact: ${error.message}`);
-  }
 }
 
 /**
@@ -234,7 +191,7 @@ async function sendConfirmationEmail(email: string): Promise<boolean> {
 
 /**
  * POST /api/notify
- * Add email to SendGrid contact list and send confirmation
+ * Add email to database and send confirmation
  */
 export async function POST(request: NextRequest) {
   try {
@@ -258,10 +215,18 @@ export async function POST(request: NextRequest) {
 
     console.log(`\n📝 Processing signup for ${email}...`);
 
-    // Add to SendGrid contact list
-    console.log('Adding to contact list...');
-    await addToContactList(email);
-    console.log('Contact added successfully');
+    // Check if email already exists
+    if (hasEmailSignedUp(email)) {
+      return NextResponse.json(
+        { success: false, message: 'This email is already signed up!' },
+        { status: 400 }
+      );
+    }
+
+    // Add to database
+    console.log('Adding to database...');
+    createSignup(email);
+    console.log('Email stored successfully');
 
     // Send confirmation email
     console.log('Sending confirmation email...');
@@ -278,6 +243,14 @@ export async function POST(request: NextRequest) {
     console.error('❌ Signup Error:', error);
     
     const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+    
+    // Handle duplicate email error
+    if (errorMessage === 'EMAIL_EXISTS') {
+      return NextResponse.json(
+        { success: false, message: 'This email is already signed up!' },
+        { status: 400 }
+      );
+    }
     
     return NextResponse.json(
       { 
