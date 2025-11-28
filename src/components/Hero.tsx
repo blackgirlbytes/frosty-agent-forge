@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -9,6 +9,23 @@ import { Lock } from "lucide-react";
 export const Hero = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [snowflakes, setSnowflakes] = useState<Array<{
+    left: string;
+    fontSize: string;
+    animationDuration: string;
+    animationDelay: string;
+  }>>([]);
+
+  // Generate snowflakes only on client side to avoid hydration mismatch
+  useEffect(() => {
+    const flakes = [...Array(20)].map(() => ({
+      left: `${Math.random() * 100}%`,
+      fontSize: `${Math.random() * 10 + 10}px`,
+      animationDuration: `${Math.random() * 10 + 10}s`,
+      animationDelay: `${Math.random() * 5}s`,
+    }));
+    setSnowflakes(flakes);
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,15 +51,15 @@ export const Hero = () => {
       />
       
       {/* Snowflakes */}
-      {[...Array(20)].map((_, i) => (
+      {snowflakes.map((flake, i) => (
         <div
           key={i}
           className="snowflake"
           style={{
-            left: `${Math.random() * 100}%`,
-            fontSize: `${Math.random() * 10 + 10}px`,
-            animationDuration: `${Math.random() * 10 + 10}s`,
-            animationDelay: `${Math.random() * 5}s`,
+            left: flake.left,
+            fontSize: flake.fontSize,
+            animationDuration: flake.animationDuration,
+            animationDelay: flake.animationDelay,
           }}
         >
           ❄
