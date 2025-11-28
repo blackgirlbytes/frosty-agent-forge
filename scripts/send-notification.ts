@@ -36,8 +36,8 @@ function getChallengeUnlockTemplate(day: number): EmailTemplate {
         body { 
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
           line-height: 1.6; 
-          color: #e2e8f0;
-          background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+          color: #1f2937;
+          background: #ffffff;
           margin: 0;
           padding: 0;
         }
@@ -73,13 +73,13 @@ function getChallengeUnlockTemplate(day: number): EmailTemplate {
           font-size: 24px;
           font-weight: bold;
           margin: 20px 0;
-          box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+          box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
         }
         .content { 
-          background: rgba(30, 41, 59, 0.8);
+          background: #ffffff;
           padding: 40px; 
           border-radius: 16px; 
-          border: 1px solid rgba(6, 182, 212, 0.2);
+          border: 2px solid #e5e7eb;
         }
         .highlight {
           color: #06b6d4;
@@ -95,12 +95,19 @@ function getChallengeUnlockTemplate(day: number): EmailTemplate {
           font-weight: 600;
           font-size: 18px;
           margin: 30px 0;
-          box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+          box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
+        }
+        .info-box {
+          background: #f0f9ff;
+          border-left: 4px solid #06b6d4;
+          padding: 20px;
+          margin: 24px 0;
+          border-radius: 8px;
         }
         .footer { 
           text-align: center; 
           margin-top: 40px; 
-          color: #94a3b8; 
+          color: #6b7280; 
           font-size: 14px; 
         }
         ul {
@@ -109,7 +116,11 @@ function getChallengeUnlockTemplate(day: number): EmailTemplate {
         }
         li {
           margin: 12px 0;
-          color: #cbd5e1;
+          color: #4b5563;
+        }
+        a {
+          color: #06b6d4;
+          text-decoration: none;
         }
       </style>
     </head>
@@ -147,7 +158,7 @@ function getChallengeUnlockTemplate(day: number): EmailTemplate {
           </p>
 
           ${day === 1 ? `
-          <div style="background: rgba(6, 182, 212, 0.1); border-left: 4px solid #06b6d4; padding: 20px; margin: 24px 0; border-radius: 8px;">
+          <div class="info-box">
             <strong style="color: #06b6d4;">💡 Tips for Success:</strong>
             <ul>
               <li>Read the challenge carefully before starting</li>
