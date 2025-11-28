@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     site: "@AdventOfAI",
   },
   icons: {
-    icon: '/favicon.ico',
+    icon: '/goose-logo.png',
   },
 };
 
