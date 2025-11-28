@@ -36,8 +36,8 @@ async function sendConfirmationEmail(email: string): Promise<boolean> {
         body { 
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
           line-height: 1.6; 
-          color: #e2e8f0;
-          background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+          color: #1f2937;
+          background: #ffffff;
           margin: 0;
           padding: 0;
         }
@@ -64,18 +64,22 @@ async function sendConfirmationEmail(email: string): Promise<boolean> {
           -webkit-text-fill-color: transparent;
           background-clip: text;
         }
+        .subtitle {
+          font-size: 20px;
+          color: #6b7280;
+        }
         .content { 
-          background: rgba(30, 41, 59, 0.8);
+          background: #ffffff;
           padding: 40px; 
           border-radius: 16px; 
-          border: 1px solid rgba(6, 182, 212, 0.2);
+          border: 2px solid #e5e7eb;
         }
         .highlight {
           color: #06b6d4;
           font-weight: 600;
         }
         .info-box {
-          background: rgba(6, 182, 212, 0.1);
+          background: #f0f9ff;
           border-left: 4px solid #06b6d4;
           padding: 20px;
           margin: 24px 0;
@@ -86,13 +90,13 @@ async function sendConfirmationEmail(email: string): Promise<boolean> {
           font-size: 18px;
           margin: 30px 0;
           padding: 20px;
-          background: rgba(6, 182, 212, 0.05);
+          background: #f0f9ff;
           border-radius: 12px;
         }
         .footer { 
           text-align: center; 
           margin-top: 40px; 
-          color: #94a3b8; 
+          color: #6b7280; 
           font-size: 14px; 
         }
         .button {
@@ -104,7 +108,7 @@ async function sendConfirmationEmail(email: string): Promise<boolean> {
           border-radius: 8px;
           font-weight: 600;
           margin: 20px 0;
-          box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+          box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
         }
         ul {
           padding-left: 24px;
@@ -112,7 +116,14 @@ async function sendConfirmationEmail(email: string): Promise<boolean> {
         }
         li {
           margin: 12px 0;
-          color: #cbd5e1;
+          color: #4b5563;
+        }
+        a {
+          color: #06b6d4;
+          text-decoration: none;
+        }
+        a:hover {
+          text-decoration: underline;
         }
       </style>
     </head>
@@ -121,7 +132,7 @@ async function sendConfirmationEmail(email: string): Promise<boolean> {
         <div class="header">
           <div class="snowflake">❄️ ❄️ ❄️</div>
           <h1 class="title">Advent of AI</h1>
-          <p style="font-size: 20px; color: #94a3b8;">17 Days of Mastery</p>
+          <p class="subtitle">17 Days of Mastery</p>
         </div>
         
         <div class="content">
@@ -144,16 +155,16 @@ async function sendConfirmationEmail(email: string): Promise<boolean> {
 
           <div class="countdown">
             <strong style="color: #06b6d4; font-size: 20px;">Challenges start in just a few days!</strong>
-            <p style="margin: 10px 0 0 0; color: #94a3b8;">Mark your calendar for December 1st</p>
+            <p style="margin: 10px 0 0 0; color: #6b7280;">Mark your calendar for December 1st</p>
           </div>
 
           <p style="font-size: 16px; margin-top: 24px;">
             In the meantime, you might want to:
           </p>
           <ul>
-            <li>Install <a href="https://block.github.io/goose/docs/getting-started/installation/" style="color: #06b6d4;">goose</a> and get familiar with it</li>
-            <li>Join the <a href="https://discord.gg/goose-oss" style="color: #06b6d4;">Discord community</a></li>
-            <li>Check out the <a href="https://block.github.io/goose" style="color: #06b6d4;">documentation</a></li>
+            <li>Install <a href="https://block.github.io/goose/docs/getting-started/installation/">goose</a> and get familiar with it</li>
+            <li>Join the <a href="https://discord.gg/goose-oss">Discord community</a></li>
+            <li>Check out the <a href="https://block.github.io/goose">documentation</a></li>
           </ul>
 
           <p style="font-size: 16px; margin-top: 24px;">
