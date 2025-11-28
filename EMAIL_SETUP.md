@@ -4,70 +4,38 @@ This guide explains how to set up SendGrid for the Advent of AI email notificati
 
 ## Overview
 
-The email system does two things:
-1. **Stores email addresses** in a SendGrid contact list
+The email system:
+1. **Stores email addresses** in a local SQLite database
 2. **Sends immediate confirmation emails** when users sign up
+3. **Provides scripts** to send bulk notifications when challenges unlock
 
 ## Setup Steps
 
-### 1. Create a SendGrid Account
+### 1. Install Dependencies
 
-1. Go to [SendGrid](https://sendgrid.com/) and sign up for a free account
-2. Free tier includes 100 emails/day which should be sufficient for testing
+**Please run this command:**
+```bash
+npm install @sendgrid/mail better-sqlite3 dotenv tsx
+npm install -D @types/better-sqlite3
+```
 
-### 2. Create an API Key
+### 2. Configure SendGrid
 
-1. Go to **Settings** → **API Keys**
-2. Click **Create API Key**
-3. Name it something like "Advent of AI Notifications"
-4. Select **Full Access** (or at minimum: Mail Send + Marketing Campaigns)
-5. Copy the API key (you won't see it again!)
-
-### 3. Create a Contact List
-
-1. Go to **Marketing** → **Contacts**
-2. Click **Create a New List**
-3. Name it "Advent of AI Signups" (or whatever you prefer)
-4. Once created, click on the list name
-5. Copy the **List ID** from the URL (it looks like: `a1b2c3d4-e5f6-7890-abcd-ef1234567890`)
-
-### 4. Verify Sender Email (Important!)
-
-SendGrid requires you to verify your sender email before you can send emails:
-
-1. Go to **Settings** → **Sender Authentication**
-2. Choose one of these options:
-   - **Single Sender Verification** (easier, good for testing)
-     - Click "Verify a Single Sender"
-     - Enter your email address (e.g., `noreply@yourdomain.com`)
-     - Check your inbox and click the verification link
-   - **Domain Authentication** (better for production)
-     - Follow the domain authentication flow
-     - Add DNS records to your domain
-
-### 5. Configure Environment Variables
+You already have a SendGrid account! Just need to set up the environment variables.
 
 Create a `.env.local` file in the project root:
 
 ```bash
-SENDGRID_API_KEY=SG.your_actual_api_key_here
-SENDGRID_LIST_ID=your_list_id_here
-FROM_EMAIL=noreply@yourdomain.com
+SENDGRID_API_KEY=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
+FROM_EMAIL=goose team <noreply@yourdomain.com>
 ```
 
 **Important:** 
-- The `FROM_EMAIL` must match the email you verified in step 4
+- Use your existing SendGrid API key from the goose-access-gateway project
+- The `FROM_EMAIL` must be a verified sender in your SendGrid account
 - Never commit `.env.local` to git (it's already in `.gitignore`)
 
-### 6. Install Dependencies
-
-Run this command (if you haven't already):
-
-```bash
-npm install @sendgrid/mail @sendgrid/client
-```
-
-### 7. Test the Integration
+### 3. Test the Integration
 
 1. Start your dev server: `npm run dev`
 2. Go to `http://localhost:3001`
@@ -77,80 +45,173 @@ npm install @sendgrid/mail @sendgrid/client
 
 ## How It Works
 
-### API Endpoint: `/api/notify`
+### Signup Flow
 
 When a user submits the signup form:
 
 1. **Validates the email** format
-2. **Adds to SendGrid contact list** using the Marketing API
-3. **Sends confirmation email** immediately using the Mail API
-4. **Returns success/error** to the frontend
+2. **Checks for duplicates** in the database
+3. **Stores email** in SQLite database (`data/signups.db`)
+4. **Sends confirmation email** immediately via SendGrid
+5. **Returns success/error** to the frontend
 
-### Email Template
+### Database Structure
 
-The confirmation email includes:
-- Welcome message with snowflake theme
-- Information about the 17 challenges
-- Links to goose documentation and Discord
-- Countdown reminder for December 1st
+The SQLite database (`data/signups.db`) contains:
+- `id`: Auto-incrementing ID
+- `email`: User's email (unique)
+- `subscribed`: 1 = subscribed, 0 = unsubscribed
+- `created_at`: Timestamp of signup
 
-## Sending Bulk Emails Later
+### Email Templates
 
-When you're ready to notify everyone about challenge unlocks:
+Two email templates are included:
 
-1. Go to **Marketing** → **Single Sends**
-2. Click **Create a Single Send**
-3. Design your email
-4. Select your "Advent of AI Signups" list
-5. Schedule or send immediately
+1. **Confirmation Email** - Sent immediately on signup
+   - Welcome message
+   - Information about the 17 challenges
+   - Links to goose docs and Discord
+   - Countdown reminder
+
+2. **Challenge Unlock Email** - Sent when you run the notification script
+   - Day number badge
+   - Challenge unlock announcement
+   - Call-to-action button
+   - Tips and encouragement
+
+## Managing Signups
+
+### View All Signups
+
+```bash
+npm run signups:view
+```
+
+This displays:
+- Total signups, subscribed, and unsubscribed counts
+- List of all emails with their status
+
+### Export to CSV
+
+```bash
+npm run signups:export
+```
+
+Exports all signups to `data/exports/signups-YYYY-MM-DD.csv`
+
+### Access the Database Directly
+
+The database file is at `data/signups.db`. You can use any SQLite client to view/query it:
+
+```bash
+# Using sqlite3 command line
+sqlite3 data/signups.db "SELECT * FROM signups;"
+```
+
+## Sending Notifications
+
+When you're ready to notify everyone about a challenge unlock:
+
+### Send Day 1 Notification
+
+```bash
+npm run notify:send
+```
+
+### Send Specific Day Notification
+
+```bash
+npx tsx scripts/send-notification.ts --day=5
+```
+
+This will:
+1. Fetch all subscribed emails from the database
+2. Send personalized challenge unlock emails to each
+3. Show progress and summary
+4. Rate-limit to avoid SendGrid limits (100ms between emails)
+
+### Email Quota
+
+Your SendGrid account has:
+- **Email API**: 50,000 emails/month (you have 49,991 left)
+- This is plenty for your advent calendar!
 
 ## Troubleshooting
 
 ### "Failed to send email" Error
 
 - Check that your `SENDGRID_API_KEY` is correct
-- Verify that your sender email is authenticated
+- Verify that your sender email is authenticated in SendGrid
 - Check SendGrid dashboard for any account issues
 
-### "Failed to add contact" Error
+### "Email already signed up" Error
 
-- Verify your `SENDGRID_LIST_ID` is correct
-- Ensure your API key has Marketing Campaigns permissions
+- This is expected behavior to prevent duplicates
+- The email is already in your database
 
-### Email Not Arriving
+### Database Not Found
 
-- Check spam/junk folder
-- Verify sender email is authenticated in SendGrid
-- Check SendGrid Activity Feed for delivery status
+- The database is created automatically on first run
+- Make sure the `data/` directory exists
+- Check file permissions
 
 ### Rate Limits
 
-- Free tier: 100 emails/day
-- If you need more, upgrade your SendGrid plan
+- Free tier: 100 emails/day for Marketing Campaigns (not used)
+- Email API: 50,000 emails/month (what we're using)
+- Script includes rate limiting (100ms between emails)
+
+## File Structure
+
+```
+frosty-agent-forge/
+├── app/
+│   └── api/
+│       └── notify/
+│           └── route.ts          # API endpoint for signups
+├── lib/
+│   └── db.ts                     # Database operations
+├── scripts/
+│   ├── send-notification.ts      # Send bulk notifications
+│   └── view-signups.ts           # View/export signups
+├── data/
+│   ├── signups.db                # SQLite database (auto-created)
+│   └── exports/                  # CSV exports (auto-created)
+└── .env.local                    # Environment variables (create this)
+```
 
 ## Security Notes
 
-- Never expose your API key in client-side code
-- The API route runs server-side only
-- `.env.local` is gitignored by default
-- Consider adding rate limiting for production
+- Database file is gitignored
+- API key is server-side only
+- Email validation prevents invalid entries
+- Duplicate prevention built-in
+- Unsubscribe functionality ready (can be added to emails later)
 
 ## Production Checklist
 
 Before going live:
 
-- [ ] Domain authentication completed (not just single sender)
+- [ ] Domain authentication in SendGrid (not just single sender)
 - [ ] Sender email matches your domain
-- [ ] API key has appropriate permissions (not Full Access)
-- [ ] Rate limiting implemented on `/api/notify`
+- [ ] Rate limiting on `/api/notify` endpoint
 - [ ] Error monitoring set up
-- [ ] SendGrid plan upgraded if expecting high volume
-- [ ] Unsubscribe links working (SendGrid handles this automatically)
+- [ ] Database backups configured
 - [ ] Privacy policy and terms updated
+- [ ] Test all email templates on multiple clients
+- [ ] Add unsubscribe links to bulk emails (required by law)
+
+## Next Steps
+
+1. **Install dependencies** (see step 1 above)
+2. **Configure `.env.local`** with your SendGrid credentials
+3. **Test signup flow** on localhost
+4. **Collect signups** leading up to December 1st
+5. **Send notifications** when challenges unlock
 
 ## Resources
 
 - [SendGrid Documentation](https://docs.sendgrid.com/)
 - [SendGrid Node.js Library](https://github.com/sendgrid/sendgrid-nodejs)
-- [Marketing Campaigns API](https://docs.sendgrid.com/api-reference/contacts/add-or-update-a-contact)
-- [Mail Send API](https://docs.sendgrid.com/api-reference/mail-send/mail-send)
+- [Better SQLite3 Documentation](https://github.com/WiseLibs/better-sqlite3)
+- [goose Documentation](https://block.github.io/goose)
