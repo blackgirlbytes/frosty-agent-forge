@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 210 100% 6%;
+    --foreground: 195 100% 95%;
+
+    --card: 210 60% 10%;
+    --card-foreground: 195 100% 95%;
+
+    --popover: 210 60% 10%;
+    --popover-foreground: 195 100% 95%;
+
+    --primary: 190 100% 50%;
+    --primary-foreground: 210 100% 10%;
+
+    --secondary: 210 50% 20%;
+    --secondary-foreground: 195 100% 95%;
+
+    --muted: 210 40% 15%;
+    --muted-foreground: 195 30% 65%;
+
+    --accent: 180 100% 60%;
+    --accent-foreground: 210 100% 10%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 210 30% 20%;
+    --input: 210 30% 20%;
+    --ring: 190 100% 50%;
+
+    --radius: 0.75rem;
+
+    /* Winter theme gradients and effects */
+    --gradient-aurora: linear-gradient(135deg, hsl(195 100% 50% / 0.2) 0%, hsl(180 100% 60% / 0.2) 50%, hsl(210 80% 40% / 0.2) 100%);
+    --gradient-frost: linear-gradient(180deg, hsl(195 100% 95% / 0.05) 0%, transparent 100%);
+    --glow-cyan: 0 0 20px hsl(190 100% 50% / 0.3);
+    --glow-strong: 0 0 30px hsl(190 100% 50% / 0.5), 0 0 60px hsl(180 100% 60% / 0.3);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Manrope', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Syne', sans-serif;
+  }
+}
+
+@layer utilities {
+  .frosted-glass {
+    @apply backdrop-blur-md bg-card/30 border border-border/50;
+  }
+
+  .frosted-glass-strong {
+    @apply backdrop-blur-xl bg-card/40 border border-border/60;
+  }
+
+  .glow-on-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .glow-on-hover:hover {
+    box-shadow: var(--glow-cyan);
+    transform: translateY(-2px);
+  }
+
+  .text-gradient-cyan {
+    @apply bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent;
+  }
+
+  /* Winter animation effects */
+  .snowflake {
+    position: absolute;
+    top: -10px;
+    color: hsl(var(--primary) / 0.6);
+    animation: snowfall linear infinite;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  @keyframes snowfall {
+    0% {
+      transform: translateY(0) translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) translateX(50px) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes aurora-shift {
+    0%, 100% {
+      transform: translateX(-10%) scale(1.1);
+      opacity: 0.3;
+    }
+    50% {
+      transform: translateX(10%) scale(1.2);
+      opacity: 0.5;
+    }
+  }
+}
