@@ -23,8 +23,29 @@ export const Hero = () => {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center px-4 py-20 overflow-hidden">
-      {/* Aurora background effect */}
-      <div className="absolute inset-0 bg-gradient-aurora opacity-30 animate-pulse" style={{ animationDuration: '8s' }} />
+      {/* Aurora background effect with shimmer */}
+      <div 
+        className="absolute inset-0 bg-gradient-aurora opacity-30" 
+        style={{ 
+          animation: 'aurora-shift 12s ease-in-out infinite'
+        }} 
+      />
+      
+      {/* Snowflakes */}
+      {[...Array(20)].map((_, i) => (
+        <div
+          key={i}
+          className="snowflake"
+          style={{
+            left: `${Math.random() * 100}%`,
+            fontSize: `${Math.random() * 10 + 10}px`,
+            animationDuration: `${Math.random() * 10 + 10}s`,
+            animationDelay: `${Math.random() * 5}s`,
+          }}
+        >
+          ❄
+        </div>
+      ))}
       
       <div className="relative z-10 max-w-4xl mx-auto text-center">
         {/* Lock badge */}
@@ -41,8 +62,8 @@ export const Hero = () => {
 
         {/* Subheadline */}
         <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
-          Daily hands-on challenges to build real AI agent proficiency. Learn{" "}
-          <span className="text-primary font-semibold">goose</span> framework through{" "}
+          An advent calendar of daily hands-on challenges to build real AI agent proficiency. Master{" "}
+          <span className="text-primary font-semibold">goose</span>, the open-source AI agent, through{" "}
           <span className="text-accent font-semibold">agentic workflows</span>. Weekdays only, December 1-24.
         </p>
 

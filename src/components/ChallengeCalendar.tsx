@@ -13,10 +13,10 @@ export const ChallengeCalendar = () => {
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="font-display text-3xl md:text-5xl font-bold mb-4">
-            17 Locked Challenges
+            Your Advent Calendar
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Each challenge unlocks on a weekday. Build your AI agent expertise step by step.
+            17 challenges unlock each weekday from December 1-24. Build your AI agent expertise day by day.
           </p>
         </div>
 
