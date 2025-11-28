@@ -103,9 +103,14 @@ export const Hero = () => {
 
         {/* Subheadline */}
         <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
-          An advent calendar of daily hands-on challenges to build real AI agent proficiency. Master{" "}
-          <span className="text-primary font-semibold">goose</span>, the open-source AI agent, through{" "}
-          <span className="text-accent font-semibold">agentic workflows</span>. Weekdays only, December 1-24.
+          An advent calendar of AI engineering challenges. Learn{" "}
+          <span className="text-primary font-semibold">goose</span>{" "}
+          by building real projects—from CLI automation to production deployments.
+        </p>
+
+        {/* Weekdays info */}
+        <p className="text-base md:text-lg text-muted-foreground/80 mb-12 max-w-xl mx-auto">
+          Weekdays only, December 1-24.
         </p>
 
         {/* Email signup form */}
