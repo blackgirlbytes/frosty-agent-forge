@@ -9,6 +9,8 @@ import { Lock } from "lucide-react";
 export const Hero = () => {
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [snowflakes, setSnowflakes] = useState<Array<{
     left: string;
     fontSize: string;
@@ -32,6 +34,8 @@ export const Hero = () => {
     if (!email) return;
     
     setIsSubmitting(true);
+    setSuccessMessage("");
+    setErrorMessage("");
     
     try {
       const response = await fetch('/api/notify', {
@@ -45,14 +49,14 @@ export const Hero = () => {
       const data = await response.json();
 
       if (response.ok && data.success) {
-        toast.success("You're on the list! Check your inbox for confirmation.");
+        setSuccessMessage("You're on the list! Check your inbox (and spam folder) for confirmation.");
         setEmail("");
       } else {
-        toast.error(data.message || "Something went wrong. Please try again.");
+        setErrorMessage(data.message || "Something went wrong. Please try again.");
       }
     } catch (error) {
       console.error('Signup error:', error);
-      toast.error("Failed to sign up. Please try again.");
+      setErrorMessage("Failed to sign up. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -105,7 +109,7 @@ export const Hero = () => {
         </p>
 
         {/* Email signup form */}
-        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-8">
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-4">
           <Input
             type="email"
             placeholder="your@email.com"
@@ -123,10 +127,29 @@ export const Hero = () => {
           </Button>
         </form>
 
+        {/* Success/Error Messages */}
+        {successMessage && (
+          <div className="max-w-md mx-auto mb-4 p-4 rounded-lg bg-primary/10 border border-primary/20 backdrop-blur-sm">
+            <p className="text-sm font-medium text-primary">
+              ✅ {successMessage}
+            </p>
+          </div>
+        )}
+        
+        {errorMessage && (
+          <div className="max-w-md mx-auto mb-4 p-4 rounded-lg bg-red-500/10 border border-red-500/20 backdrop-blur-sm">
+            <p className="text-sm font-medium text-red-400">
+              ❌ {errorMessage}
+            </p>
+          </div>
+        )}
+
         {/* Small trust indicator */}
-        <p className="text-sm text-muted-foreground">
-          Join developers preparing for the challenge
-        </p>
+        {!successMessage && !errorMessage && (
+          <p className="text-sm text-muted-foreground mb-4">
+            Join developers preparing for the challenge
+          </p>
+        )}
       </div>
     </section>
   );
