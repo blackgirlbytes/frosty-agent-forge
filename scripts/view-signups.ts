@@ -8,7 +8,7 @@
  *   --export     Export emails to a CSV file
  */
 
-import { getAllSignups, getSignupStats } from '../lib/db';
+import { getAllSignups, getSignupStats } from '../src/lib/db';
 import * as fs from 'fs';
 import * as path from 'path';
 

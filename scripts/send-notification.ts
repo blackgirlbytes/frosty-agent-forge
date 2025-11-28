@@ -9,7 +9,7 @@
  */
 
 import sgMail from '@sendgrid/mail';
-import { getSubscribedEmails, getSignupStats } from '../lib/db';
+import { getSubscribedEmails, getSignupStats } from '../src/lib/db';
 import * as dotenv from 'dotenv';
 
 // Load environment variables
