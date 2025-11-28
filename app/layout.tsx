@@ -14,8 +14,21 @@ const syne = Syne({
 });
 
 export const metadata: Metadata = {
-  title: "Advent of AI - Frosty Agent Forge",
-  description: "A 17-day AI agent challenge platform",
+  title: "Advent of AI - 17 Days of AI Agent Challenges",
+  description: "Build AI agent proficiency through 17 hands-on challenges. Learn goose framework and agentic workflows this December.",
+  authors: [{ name: "Advent of AI" }],
+  openGraph: {
+    title: "Advent of AI - 17 Days of AI Agent Challenges",
+    description: "Build AI agent proficiency through 17 hands-on challenges. Learn goose framework and agentic workflows this December.",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    site: "@AdventOfAI",
+  },
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
