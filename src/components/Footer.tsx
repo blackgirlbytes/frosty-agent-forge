@@ -16,14 +16,14 @@ export const Footer = () => {
           </div>
 
           <div className="flex gap-6 text-sm text-muted-foreground">
-            <a href="#" className="hover:text-primary transition-colors duration-200">
-              About
+            <a href="https://github.com/block/goose" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors duration-200">
+              GitHub
             </a>
-            <a href="#" className="hover:text-primary transition-colors duration-200">
-              FAQ
+            <a href="https://discord.gg/goose-oss" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors duration-200">
+              Discord
             </a>
-            <a href="#" className="hover:text-primary transition-colors duration-200">
-              Contact
+            <a href="https://block.github.io/goose/docs/quickstart" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors duration-200">
+              Docs
             </a>
           </div>
         </div>
