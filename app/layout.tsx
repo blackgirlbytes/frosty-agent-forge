@@ -21,10 +21,20 @@ export const metadata: Metadata = {
     title: "Advent of AI - 17 Days of AI Agent Challenges",
     description: "Build AI agent proficiency through 17 hands-on challenges. Learn goose framework and agentic workflows this December.",
     type: "website",
+    images: [
+      {
+        url: '/api/og',
+        width: 1200,
+        height: 630,
+        alt: 'Advent of AI - Build with Agents',
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    site: "@AdventOfAI",
+    title: "Advent of AI - 17 Days of AI Agent Challenges",
+    description: "Build AI agent proficiency through 17 hands-on challenges. Learn goose framework and agentic workflows this December.",
+    images: ['/api/og'],
   },
   icons: {
     icon: '/goose-logo.png',
