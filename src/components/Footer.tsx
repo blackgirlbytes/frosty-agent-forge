@@ -10,7 +10,7 @@ export const Footer = () => {
               Advent of AI
             </h3>
             <p className="text-sm text-muted-foreground">
-              17 days of AI agent mastery through goose framework
+              From automation to orchestration with goose
             </p>
           </div>
 
