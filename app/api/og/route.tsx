@@ -99,8 +99,9 @@ export async function GET(request: Request) {
           </div>
 
           {/* Goose Logo */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            // @ts-ignore - ImageResponse requires arrayBuffer for images
+            // @ts-expect-error - ImageResponse requires arrayBuffer for images
             src={logoData}
             alt="goose logo"
             width="120"
