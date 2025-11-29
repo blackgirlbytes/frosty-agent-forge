@@ -2,7 +2,11 @@ import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
 
-export async function GET() {
+export async function GET(request: Request) {
+  // Fetch the goose logo
+  const logoUrl = new URL('/goose-logo.png', request.url);
+  const logoData = await fetch(logoUrl).then((res) => res.arrayBuffer());
+
   return new ImageResponse(
     (
       <div
@@ -76,34 +80,34 @@ export async function GET() {
               display: 'flex',
             }}
           >
-            Build with Agents
+            Build with goose
           </div>
 
           {/* Description */}
           <div
             style={{
-              fontSize: '32px',
+              fontSize: '36px',
               color: '#94a3b8',
               textAlign: 'center',
               maxWidth: '900px',
               lineHeight: 1.4,
+              marginBottom: '50px',
               display: 'flex',
             }}
           >
-            17 hands-on AI engineering challenges. Learn goose by building real projects.
+            17 hands-on AI engineering challenges
           </div>
 
-          {/* Dates */}
-          <div
+          {/* Goose Logo */}
+          <img
+            src={logoData as any}
+            alt="goose logo"
+            width="120"
+            height="120"
             style={{
-              fontSize: '28px',
-              color: '#64748b',
-              marginTop: '30px',
-              display: 'flex',
+              borderRadius: '20px',
             }}
-          >
-            Weekdays only • December 1-24
-          </div>
+          />
         </div>
 
         {/* Bottom accent */}
