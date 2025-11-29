@@ -104,7 +104,7 @@ export const Hero = () => {
         {/* Subheadline */}
         <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
           An advent calendar of AI engineering challenges. Learn{" "}
-          <span className="text-primary font-semibold">goose</span>{" "}
+          <a href="https://block.github.io/goose" target="_blank" rel="noopener noreferrer" className="text-primary font-bold no-underline hover:text-primary/90 transition-colors">goose</a>{" "}
           by building real projects—from CLI automation to production deployments.
         </p>
 
