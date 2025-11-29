@@ -100,7 +100,8 @@ export async function GET(request: Request) {
 
           {/* Goose Logo */}
           <img
-            src={logoData as any}
+            // @ts-ignore - ImageResponse requires arrayBuffer for images
+            src={logoData}
             alt="goose logo"
             width="120"
             height="120"
