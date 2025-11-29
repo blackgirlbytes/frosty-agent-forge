@@ -62,7 +62,7 @@ export const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center px-4 py-20 overflow-hidden">
+    <section id="hero" className="relative min-h-screen flex items-center justify-center px-4 py-20 overflow-hidden">
       {/* Aurora background effect with shimmer */}
       <div 
         className="absolute inset-0 bg-gradient-aurora opacity-30" 

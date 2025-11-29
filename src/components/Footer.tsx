@@ -10,7 +10,8 @@ export const Footer = () => {
               Advent of AI
             </h3>
             <p className="text-sm text-muted-foreground">
-              From automation to orchestration with goose
+              From automation to orchestration with{" "}
+              <a href="https://block.github.io/goose" target="_blank" rel="noopener noreferrer" className="text-primary font-bold no-underline hover:text-primary/90 transition-colors">goose</a>
             </p>
           </div>
 

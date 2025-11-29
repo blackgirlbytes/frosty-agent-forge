@@ -49,7 +49,7 @@ export const ChallengeCalendar = () => {
 
         <div className="mt-12 text-center">
           <p className="text-sm text-muted-foreground">
-            Sign up above to be notified when the first challenge unlocks on December 1st, 2025
+            <a href="#hero" className="text-gradient-cyan font-bold no-underline hover:opacity-80 transition-opacity">Sign up</a> above to be notified when the first challenge unlocks on December 1st, 2025
           </p>
         </div>
       </div>
