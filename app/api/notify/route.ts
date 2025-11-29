@@ -194,9 +194,10 @@ async function sendConfirmationEmail(email: string): Promise<boolean> {
     await sgMail.send(msg);
     console.log('✅ Confirmation email sent successfully');
     return true;
-  } catch (error: any) {
-    console.error('❌ SendGrid Email Error:', error.response?.body || error);
-    throw new Error(`Failed to send email: ${error.message}`);
+  } catch (error) {
+    console.error('❌ SendGrid Email Error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    throw new Error(`Failed to send email: ${errorMessage}`);
   }
 }
 

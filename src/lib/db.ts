@@ -58,9 +58,15 @@ export function createSignup(email: string): Signup {
       subscribed: 1,
       created_at: new Date().toISOString()
     };
-  } catch (error: any) {
+  } catch (error) {
     // If email already exists, return the existing record
-    if (error.code === 'SQLITE_CONSTRAINT_UNIQUE' || error.message.includes('UNIQUE constraint failed')) {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+      const existing = getSignupByEmail(email);
+      if (existing) {
+        throw new Error('EMAIL_EXISTS');
+      }
+    }
+    if (error instanceof Error && error.message.includes('UNIQUE constraint failed')) {
       const existing = getSignupByEmail(email);
       if (existing) {
         throw new Error('EMAIL_EXISTS');
