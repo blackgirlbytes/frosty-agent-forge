@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export const Footer = () => {
   return (
     <footer className="py-12 px-4 border-t border-border/30">
@@ -25,8 +27,15 @@ export const Footer = () => {
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-border/20 text-center text-sm text-muted-foreground">
-          © 2025 Advent of AI. Built for developers who want to master AI agents.
+        <div className="mt-8 pt-8 border-t border-border/20 flex items-center justify-center gap-2 text-sm text-muted-foreground">
+          <Image 
+            src="/goose-logo.png" 
+            alt="goose logo" 
+            width={24} 
+            height={24}
+            className="opacity-80"
+          />
+          <span>made by goose</span>
         </div>
       </div>
     </footer>
