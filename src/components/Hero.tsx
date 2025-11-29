@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Lock } from "lucide-react";
 
 export const Hero = () => {
   const [email, setEmail] = useState("");
@@ -89,12 +88,6 @@ export const Hero = () => {
       ))}
       
       <div className="relative z-10 max-w-4xl mx-auto text-center">
-        {/* Lock badge */}
-        <div className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full frosted-glass-strong glow-on-hover">
-          <Lock className="w-4 h-4 text-primary" />
-          <span className="text-sm font-medium text-muted-foreground">17 Challenges Locked Until Dec 1, 2025</span>
-        </div>
-
         {/* Main headline */}
         <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
           <span className="block mb-2">Advent of AI</span>
