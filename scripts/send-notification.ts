@@ -145,7 +145,7 @@ function getChallengeUnlockTemplate(day: number): EmailTemplate {
           </p>
 
           <div style="text-align: center; margin: 40px 0;">
-            <a href="http://localhost:3001" class="cta-button">
+            <a href="https://frosty-agent-forge-production.up.railway.app" class="cta-button">
               Start Day ${day} Challenge →
             </a>
           </div>
