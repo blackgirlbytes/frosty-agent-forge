@@ -15,7 +15,7 @@ export const Footer = () => {
             </p>
           </div>
 
-          <div className="flex gap-6 text-sm text-muted-foreground">
+          <div className="flex flex-wrap gap-4 md:gap-6 text-sm text-muted-foreground justify-center md:justify-end">
             <a href="https://github.com/block/goose" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors duration-200">
               GitHub
             </a>
@@ -24,6 +24,18 @@ export const Footer = () => {
             </a>
             <a href="https://block.github.io/goose/docs/quickstart" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors duration-200">
               Docs
+            </a>
+            <a href="https://www.youtube.com/@goose-oss" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors duration-200">
+              YouTube
+            </a>
+            <a href="https://www.linkedin.com/company/goose-oss" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors duration-200">
+              LinkedIn
+            </a>
+            <a href="https://x.com/goose_oss" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors duration-200">
+              X
+            </a>
+            <a href="https://bsky.app/profile/opensource.block.xyz" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors duration-200">
+              BlueSky
             </a>
           </div>
         </div>
