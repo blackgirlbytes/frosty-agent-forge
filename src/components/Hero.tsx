@@ -98,14 +98,14 @@ export const Hero = () => {
         {/* Main headline */}
         <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-bold mb-6 leading-tight">
           <span className="block mb-2">Advent of AI</span>
-          <span className="text-gradient-cyan">17 Days of Mastery</span>
+          <span className="text-gradient-cyan">Build with Agents</span>
         </h1>
 
         {/* Subheadline */}
         <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto leading-relaxed">
           An advent calendar of AI engineering challenges. Learn{" "}
           <a href="https://block.github.io/goose" target="_blank" rel="noopener noreferrer" className="text-primary font-bold no-underline hover:text-primary/90 transition-colors">goose</a>{" "}
-          by building real projects—from CLI automation to production deployments.
+          by building real projects from CI automation to multi-agent orchestration.
         </p>
 
         {/* Weekdays info */}
