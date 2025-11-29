@@ -48,7 +48,7 @@ export const ChallengeCalendar = () => {
         </div>
 
         <div className="mt-12 text-center">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-base md:text-lg text-muted-foreground">
             <a href="#hero" className="text-gradient-cyan font-bold no-underline hover:opacity-80 transition-opacity">Sign up</a> above to be notified when the first challenge unlocks on December 1st, 2025
           </p>
         </div>

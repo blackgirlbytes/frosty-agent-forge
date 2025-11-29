@@ -144,7 +144,7 @@ export const Hero = () => {
 
         {/* Small trust indicator */}
         {!successMessage && !errorMessage && (
-          <p className="text-sm text-muted-foreground mb-4">
+          <p className="text-base md:text-lg text-muted-foreground mb-4">
             Join developers preparing for the challenge
           </p>
         )}
