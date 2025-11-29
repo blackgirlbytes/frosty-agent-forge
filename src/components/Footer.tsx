@@ -12,21 +12,16 @@ export const Footer = () => {
             </p>
           </div>
 
-          <div className="flex flex-col items-center md:items-end gap-3">
-            <p className="text-sm text-muted-foreground">
-              Inspired by Advent of Code
-            </p>
-            <div className="flex gap-6 text-sm text-muted-foreground">
-              <a href="#" className="hover:text-primary transition-colors duration-200">
-                About
-              </a>
-              <a href="#" className="hover:text-primary transition-colors duration-200">
-                FAQ
-              </a>
-              <a href="#" className="hover:text-primary transition-colors duration-200">
-                Contact
-              </a>
-            </div>
+          <div className="flex gap-6 text-sm text-muted-foreground">
+            <a href="#" className="hover:text-primary transition-colors duration-200">
+              About
+            </a>
+            <a href="#" className="hover:text-primary transition-colors duration-200">
+              FAQ
+            </a>
+            <a href="#" className="hover:text-primary transition-colors duration-200">
+              Contact
+            </a>
           </div>
         </div>
 
