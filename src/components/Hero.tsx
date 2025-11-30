@@ -144,10 +144,7 @@ export const Hero = () => {
 
         {/* Small trust indicator */}
         {!successMessage && !errorMessage && (
-          <div className="flex flex-col items-center gap-3">
-            <p className="text-base md:text-lg text-muted-foreground">
-              Join developers preparing for the challenge
-            </p>
+          <div className="flex items-center justify-center">
             <SignupCounter />
           </div>
         )}

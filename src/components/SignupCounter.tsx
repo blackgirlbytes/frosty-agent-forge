@@ -40,11 +40,26 @@ export const SignupCounter = () => {
     return null;
   }
 
+  // Handle different count scenarios
+  const getMessage = () => {
+    if (count === 0) {
+      return "Be the first to join the challenge";
+    } else if (count === 1) {
+      return "Join 1 other preparing for the challenge";
+    } else {
+      return (
+        <>
+          Join <span className="text-primary font-bold">{count.toLocaleString()}</span> others preparing for the challenge
+        </>
+      );
+    }
+  };
+
   return (
     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
       <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
       <span className="text-sm font-medium text-foreground">
-        <span className="text-primary font-bold">{count.toLocaleString()}</span> {count === 1 ? 'developer' : 'developers'} signed up
+        {getMessage()}
       </span>
     </div>
   );
