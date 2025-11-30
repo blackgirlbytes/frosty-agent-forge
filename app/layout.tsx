@@ -16,13 +16,13 @@ const syne = Syne({
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
 export const metadata: Metadata = {
-  title: "Advent of AI - 17 Days of AI Agent Challenges",
-  description: "Build AI agent proficiency through 17 hands-on challenges. Learn goose framework and agentic workflows this December.",
+  title: "Advent of AI",
+  description: "An advent calendar of AI engineering challenges. Learn goose by building real projects from CI automation to multi-agent orchestration.",
   authors: [{ name: "Advent of AI" }],
   metadataBase: new URL(siteUrl),
   openGraph: {
-    title: "Advent of AI - 17 Days of AI Agent Challenges",
-    description: "Build AI agent proficiency through 17 hands-on challenges. Learn goose framework and agentic workflows this December.",
+    title: "Advent of AI",
+    description: "An advent calendar of AI engineering challenges. Learn goose by building real projects from CI automation to multi-agent orchestration.",
     type: "website",
     url: siteUrl,
     images: [
@@ -36,8 +36,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Advent of AI - 17 Days of AI Agent Challenges",
-    description: "Build AI agent proficiency through 17 hands-on challenges. Learn goose framework and agentic workflows this December.",
+    title: "Advent of AI",
+    description: "An advent calendar of AI engineering challenges. Learn goose by building real projects from CI automation to multi-agent orchestration.",
     images: [`${siteUrl}/api/og`],
   },
   icons: {
