@@ -102,7 +102,7 @@ export const Hero = () => {
 
         {/* Weekdays info */}
         <p className="text-base md:text-lg text-muted-foreground/80 mb-12 max-w-xl mx-auto">
-          Weekdays only, December 1-24.
+          Weekdays only, December 1-24. Challenges unlock daily at 12:00 PM ET.
         </p>
 
         {/* Email signup form */}

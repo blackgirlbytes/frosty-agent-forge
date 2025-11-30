@@ -29,9 +29,9 @@ export const Countdown = () => {
   useEffect(() => {
     setMounted(true);
     
-    // Target: December 1, 2025 at midnight Eastern Time (EST/EDT)
+    // Target: December 1, 2025 at 12:00 PM Eastern Time (EST/EDT)
     // Using ISO format with timezone offset for Eastern Time (UTC-5)
-    const targetDate = new Date("2025-12-01T00:00:00-05:00");
+    const targetDate = new Date("2025-12-01T12:00:00-05:00");
 
     const updateCountdown = () => {
       const now = new Date();
@@ -78,9 +78,12 @@ export const Countdown = () => {
   return (
     <section className="py-16 px-4">
       <div className="max-w-4xl mx-auto text-center">
-        <h2 className="font-display text-2xl md:text-3xl font-bold mb-8 text-foreground">
+        <h2 className="font-display text-2xl md:text-3xl font-bold mb-2 text-foreground">
           Challenges Unlock In
         </h2>
+        <p className="text-sm md:text-base text-muted-foreground mb-8">
+          December 1st at 12:00 PM ET
+        </p>
         <div className="flex justify-center gap-3 md:gap-6">
           <TimeUnit value={timeLeft.days} label="Days" />
           <TimeUnit value={timeLeft.hours} label="Hours" />
