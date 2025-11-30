@@ -45,11 +45,11 @@ export const SignupCounter = () => {
     if (count === 0) {
       return "Be the first to join the challenge";
     } else if (count === 1) {
-      return "Join 1 other preparing for the challenge";
+      return "Join 1 person preparing for the challenge";
     } else {
       return (
         <>
-          Join <span className="text-primary font-bold">{count.toLocaleString()}</span> others preparing for the challenge
+          Join <span className="text-primary font-bold">{count.toLocaleString()}</span> people preparing for the challenge
         </>
       );
     }
