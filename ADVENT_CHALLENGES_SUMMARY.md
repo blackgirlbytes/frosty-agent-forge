@@ -1,7 +1,7 @@
 # 🎄 Advent of AI - Challenge Summary
 
 ## Overview
-A 17-day challenge series (weekdays only, Dec 1-24, 2025) teaching AI engineering through the **goose** framework. Each day builds on previous skills while solving real Winter Festival problems.
+A 17-day challenge series (weekdays only, Dec 1-23, 2025) teaching AI engineering through the **goose** framework. Each day builds on previous skills while solving real Winter Festival problems.
 
 ---
 

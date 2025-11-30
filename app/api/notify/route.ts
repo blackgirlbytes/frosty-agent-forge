@@ -146,7 +146,7 @@ async function sendConfirmationEmail(email: string): Promise<boolean> {
           <div class="info-box">
             <strong style="color: #06b6d4;">What to expect:</strong>
             <ul>
-              <li><strong>17 hands-on challenges</strong> - One per weekday from December 1-24</li>
+              <li><strong>17 hands-on challenges</strong> - One per weekday from December 1-23</li>
               <li><strong>Master goose</strong> - An open-source AI agent</li>
               <li><strong>Build real skills</strong> - Practical agentic workflows you can use immediately</li>
               <li><strong>Daily unlocks</strong> - New challenges appear each weekday morning</li>

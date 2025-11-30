@@ -1,7 +1,7 @@
 import { Lock } from "lucide-react";
 
 export const ChallengeCalendar = () => {
-  // Generate 17 challenges (weekdays Dec 1-24)
+  // Generate 17 challenges (weekdays Dec 1-23)
   // Map challenge numbers to actual December dates (weekdays only)
   const weekdayDates = [1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 15, 16, 17, 18, 19, 22, 23];
   
@@ -20,7 +20,7 @@ export const ChallengeCalendar = () => {
             Your Advent Calendar
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Unlock 17 challenges each weekday from December 1-24. Build your AI agent expertise through hands-on projects. Solution videos release the following day.
+            Unlock 17 challenges each weekday from December 1-23. Build your AI agent expertise through hands-on projects. Solution videos release the following day.
           </p>
         </div>
 
