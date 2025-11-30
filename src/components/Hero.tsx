@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { SignupCounter } from "@/components/SignupCounter";
 
 export const Hero = () => {
   const [email, setEmail] = useState("");
@@ -144,9 +143,9 @@ export const Hero = () => {
 
         {/* Small trust indicator */}
         {!successMessage && !errorMessage && (
-          <div className="flex items-center justify-center">
-            <SignupCounter />
-          </div>
+          <p className="text-base md:text-lg text-muted-foreground mb-4">
+            Join developers preparing for the challenge
+          </p>
         )}
       </div>
     </section>
