@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     url: siteUrl,
     images: [
       {
-        url: `${siteUrl}/api/og`,
+        url: `${siteUrl}/api/og?v=2`,
         width: 1200,
         height: 630,
         alt: 'Advent of AI - Build with goose',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Advent of AI",
     description: "An advent calendar of AI engineering challenges. Learn goose by building real projects from CI automation to multi-agent orchestration.",
-    images: [`${siteUrl}/api/og`],
+    images: [`${siteUrl}/api/og?v=2`],
   },
   icons: {
     icon: '/goose-logo.png',
