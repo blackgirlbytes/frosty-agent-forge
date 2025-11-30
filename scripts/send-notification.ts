@@ -139,13 +139,13 @@ function getChallengeUnlockTemplate(day: number): EmailTemplate {
           
           <p style="font-size: 16px;">
             ${day === 1 
-              ? 'Welcome to Day 1 of Advent of AI! Your first challenge is now live and ready to tackle.'
+              ? 'Welcome to Day 1 of <a href="https://adventofai.dev" style="color: #06b6d4; text-decoration: none; font-weight: 600;">Advent of AI</a>! Your first challenge is now live and ready to tackle.'
               : `Day ${day} is here! Ready for your next challenge?`
             }
           </p>
 
           <div style="text-align: center; margin: 40px 0;">
-            <a href="https://frosty-agent-forge-production.up.railway.app" class="cta-button">
+            <a href="https://adventofai.dev" class="cta-button">
               Start Day ${day} Challenge →
             </a>
           </div>
@@ -173,7 +173,7 @@ function getChallengeUnlockTemplate(day: number): EmailTemplate {
         <div class="footer">
           <p>Happy coding! See you tomorrow for the next challenge! ❄️</p>
           <p style="margin-top: 20px; font-size: 12px;">
-            You're receiving this because you signed up for Advent of AI challenge notifications.
+            You're receiving this because you signed up for <a href="https://adventofai.dev" style="color: #6b7280; text-decoration: none;">Advent of AI</a> challenge notifications.
           </p>
         </div>
       </div>
