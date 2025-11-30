@@ -1,8 +1,8 @@
 [phases.setup]
-nixPkgs = ['nodejs_20']
+nixPkgs = ['nodejs_20', 'git-lfs']
 
 [phases.install]
-cmds = ['npm ci']
+cmds = ['git lfs install', 'git lfs pull', 'npm ci']
 
 [phases.build]
 cmds = ['npm run build']
