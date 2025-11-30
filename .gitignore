@@ -37,7 +37,8 @@ coverage
 # Misc
 .turbo
 
-# Database (WAL files only - main db is tracked in Git LFS)
+# Database
+data/signups.db
 data/signups.db-shm
 data/signups.db-wal
 data/exports/
