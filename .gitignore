@@ -42,3 +42,4 @@ data/signups.db
 data/signups.db-shm
 data/signups.db-wal
 data/exports/
+*.mp4
