@@ -139,7 +139,7 @@ async function sendConfirmationEmail(email: string): Promise<boolean> {
           <h2 style="color: #06b6d4; margin-top: 0;">You're on the list! 🎉</h2>
           
           <p style="font-size: 16px;">
-            Thanks for signing up for <span class="highlight">Advent of AI</span>! 
+            Thanks for signing up for <a href="https://adventofai.dev" style="color: #06b6d4; text-decoration: none; font-weight: 600;">Advent of AI</a>! 
             You'll be notified when the first challenge unlocks on <strong>December 1st, 2025</strong>.
           </p>
 
@@ -147,7 +147,7 @@ async function sendConfirmationEmail(email: string): Promise<boolean> {
             <strong style="color: #06b6d4;">What to expect:</strong>
             <ul>
               <li><strong>17 hands-on challenges</strong> - One per weekday from December 1-24</li>
-              <li><strong>Master goose</strong> - The open-source AI agent framework</li>
+              <li><strong>Master goose</strong> - An open-source AI agent</li>
               <li><strong>Build real skills</strong> - Practical agentic workflows you can use immediately</li>
               <li><strong>Daily unlocks</strong> - New challenges appear each weekday morning</li>
             </ul>
@@ -175,7 +175,7 @@ async function sendConfirmationEmail(email: string): Promise<boolean> {
         <div class="footer">
           <p>Ready to master AI agents? See you December 1st! ❄️</p>
           <p style="margin-top: 20px; font-size: 12px;">
-            You're receiving this because you signed up for Advent of AI challenge notifications.
+            You're receiving this because you signed up for <a href="https://adventofai.dev" style="color: #6b7280; text-decoration: none;">Advent of AI</a> challenge notifications.
           </p>
         </div>
       </div>
