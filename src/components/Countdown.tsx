@@ -82,7 +82,7 @@ export const Countdown = () => {
           Challenges Unlock In
         </h2>
         <p className="text-sm md:text-base text-muted-foreground mb-8">
-          December 1st at 12:00 PM ET
+          December 1st at 12 PM ET
         </p>
         <div className="flex justify-center gap-3 md:gap-6">
           <TimeUnit value={timeLeft.days} label="Days" />
