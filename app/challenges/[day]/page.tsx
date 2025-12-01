@@ -4,13 +4,14 @@ import { ChallengePage } from '@/components/ChallengePage';
 import { isChallengeUnlocked, CHALLENGE_TITLES, CHALLENGE_DATES } from '@/lib/challenge-utils';
 
 interface PageProps {
-  params: {
+  params: Promise<{
     day: string;
-  };
+  }>;
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const day = parseInt(params.day, 10);
+  const { day: dayParam } = await params;
+  const day = parseInt(dayParam, 10);
   
   if (isNaN(day) || day < 1 || day > 17) {
     return {
@@ -44,8 +45,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export default function ChallengePageRoute({ params }: PageProps) {
-  const day = parseInt(params.day, 10);
+export default async function ChallengePageRoute({ params }: PageProps) {
+  const { day: dayParam } = await params;
+  const day = parseInt(dayParam, 10);
 
   // Validate day parameter
   if (isNaN(day) || day < 1 || day > 17) {
