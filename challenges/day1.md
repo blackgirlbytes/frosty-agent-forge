@@ -6,21 +6,20 @@ The Winter Festival opened this morning, and already there's trouble at Madame Z
 
 Madame Zelda is panicking. The festival organizers are panicking. But you? You have goose.
 
-**Your mission:** Use goose's CLI to generate winter fortunes with different mystical personalities. Madame Zelda needs them fast, and she needs them good. The festival's reputation depends on it.
-
-**Today's lesson:** Command-line automation with `goose run`
-
 ---
 
-## 🎯 Your Task
-Build a CLI command that generates winter fortunes with different personalities. Madame Zelda needs to be able to quickly generate fortunes for different types of customers.
+### Your mission 
 
-⚠️ **You'll need:** The goose CLI (not Desktop) - command-line tools are essential for AI engineers.
+Use goose's CLI to generate winter fortunes with different mystical personalities. Madame Zelda needs them fast, and she needs them good. The festival's reputation depends on it.
+
+⚠️ **You'll need:** The goose CLI (not Desktop) 
 
 ### Requirements
 - Generate at least 3 fortunes with different moods (grumpy, poetic, festive, sarcastic, mysterious)
 - Make them visually appealing - Use ASCII art, emojis, borders
 - Give them a theme - Ex: seasonal and magical
+
+---
 
 ### Example Output
 ```
@@ -58,7 +57,6 @@ Want to practice more AI engineering skills?
 **Advanced:**
 - Run fortune generation in a GitHub Action
 - Schedule daily fortune generation
-- Automate fortune delivery via webhook or API
 
 ---
 
@@ -69,16 +67,9 @@ Want to practice more AI engineering skills?
 Post your solution in the [Advent of AI Discussion](https://github.com/block/goose/discussions/categories/advent-of-ai) under **Day 1**.
 
 **Accepted formats:**
-- Screenshot of your fortune generator in action
-- Screen recording showing different fortune personalities
-- Link to a social media post (Twitter/X, LinkedIn, Bluesky)
+- Screen shot showing different fortune personalities
+- Link to a social media post (Twitter/X, LinkedIn, Bluesky)6
 - Link to a blog post about your solution
-
-**What to include:**
-- Your best fortune output
-- What you learned
-- Any interesting challenges you faced
-
 ---
 
 ## 📖 Resources for AI Engineers
