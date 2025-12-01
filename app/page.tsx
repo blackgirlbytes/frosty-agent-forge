@@ -3,8 +3,13 @@ import { VideoSection } from "@/components/VideoSection";
 import { Countdown } from "@/components/Countdown";
 import { ChallengeCalendar } from "@/components/ChallengeCalendar";
 import { Footer } from "@/components/Footer";
+import { LockedChallengeNotice } from "@/components/LockedChallengeNotice";
 
-export default function Home() {
+export default function Home({
+  searchParams,
+}: {
+  searchParams: { locked?: string };
+}) {
   return (
     <div className="min-h-screen bg-background relative">
       {/* Subtle background pattern */}
@@ -12,6 +17,7 @@ export default function Home() {
       
       <div className="relative z-10">
         <Hero />
+        {searchParams.locked && <LockedChallengeNotice day={parseInt(searchParams.locked)} />}
         <Countdown />
         <ChallengeCalendar />
         <VideoSection />
