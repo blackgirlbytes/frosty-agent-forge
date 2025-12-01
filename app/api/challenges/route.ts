@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getAllChallenges } from '@/lib/db';
 
+// API endpoint to get challenge unlock status
 export async function GET() {
   try {
     const challenges = getAllChallenges();
