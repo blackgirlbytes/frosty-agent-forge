@@ -9,13 +9,13 @@ on:
         required: true
         default: '1'
   
-  # TESTING: Scheduled for 5:40 AM ET (10:40 UTC) for testing
+  # TESTING: Scheduled for 6:41 AM ET (11:41 UTC) for Day 2 test
   # TODO: Change back to noon ET (17:00 UTC) after testing
   # Production: noon ET = 17:00 UTC (5pm UTC during EST)
   schedule:
     # Days 1-5: Dec 1-5 (Mon-Fri)
     - cron: '40 10 1 12 *'  # Dec 1 at 5:40 AM ET (TESTING)
-    - cron: '40 10 2 12 *'  # Dec 2 at 5:40 AM ET (TESTING)
+    - cron: '41 11 1 12 *'  # Dec 1 at 6:41 AM ET (Day 2 TESTING)
     - cron: '40 10 3 12 *'  # Dec 3 at 5:40 AM ET (TESTING)
     - cron: '40 10 4 12 *'  # Dec 4 at 5:40 AM ET (TESTING)
     - cron: '40 10 5 12 *'  # Dec 5 at 5:40 AM ET (TESTING)
