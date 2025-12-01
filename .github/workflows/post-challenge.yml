@@ -9,30 +9,30 @@ on:
         required: true
         default: '1'
   
-  # TESTING: Scheduled for 5:30 AM ET (10:30 UTC) for testing
+  # TESTING: Scheduled for 5:40 AM ET (10:40 UTC) for testing
   # TODO: Change back to noon ET (17:00 UTC) after testing
   # Production: noon ET = 17:00 UTC (5pm UTC during EST)
   schedule:
     # Days 1-5: Dec 1-5 (Mon-Fri)
-    - cron: '30 10 1 12 *'  # Dec 1 at 5:30 AM ET (TESTING)
-    - cron: '30 10 2 12 *'  # Dec 2 at 5:30 AM ET (TESTING)
-    - cron: '30 10 3 12 *'  # Dec 3 at 5:30 AM ET (TESTING)
-    - cron: '30 10 4 12 *'  # Dec 4 at 5:30 AM ET (TESTING)
-    - cron: '30 10 5 12 *'  # Dec 5 at 5:30 AM ET (TESTING)
+    - cron: '40 10 1 12 *'  # Dec 1 at 5:40 AM ET (TESTING)
+    - cron: '40 10 2 12 *'  # Dec 2 at 5:40 AM ET (TESTING)
+    - cron: '40 10 3 12 *'  # Dec 3 at 5:40 AM ET (TESTING)
+    - cron: '40 10 4 12 *'  # Dec 4 at 5:40 AM ET (TESTING)
+    - cron: '40 10 5 12 *'  # Dec 5 at 5:40 AM ET (TESTING)
     # Days 6-10: Dec 8-12 (Mon-Fri)
-    - cron: '30 10 8 12 *'  # Dec 8 at 5:30 AM ET (TESTING)
-    - cron: '30 10 9 12 *'  # Dec 9 at 5:30 AM ET (TESTING)
-    - cron: '30 10 10 12 *' # Dec 10 at 5:30 AM ET (TESTING)
-    - cron: '30 10 11 12 *' # Dec 11 at 5:30 AM ET (TESTING)
-    - cron: '30 10 12 12 *' # Dec 12 at 5:30 AM ET (TESTING)
+    - cron: '40 10 8 12 *'  # Dec 8 at 5:40 AM ET (TESTING)
+    - cron: '40 10 9 12 *'  # Dec 9 at 5:40 AM ET (TESTING)
+    - cron: '40 10 10 12 *' # Dec 10 at 5:40 AM ET (TESTING)
+    - cron: '40 10 11 12 *' # Dec 11 at 5:40 AM ET (TESTING)
+    - cron: '40 10 12 12 *' # Dec 12 at 5:40 AM ET (TESTING)
     # Days 11-17: Dec 15-19, 22-23 (Mon-Fri)
-    - cron: '30 10 15 12 *' # Dec 15 at 5:30 AM ET (TESTING)
-    - cron: '30 10 16 12 *' # Dec 16 at 5:30 AM ET (TESTING)
-    - cron: '30 10 17 12 *' # Dec 17 at 5:30 AM ET (TESTING)
-    - cron: '30 10 18 12 *' # Dec 18 at 5:30 AM ET (TESTING)
-    - cron: '30 10 19 12 *' # Dec 19 at 5:30 AM ET (TESTING)
-    - cron: '30 10 22 12 *' # Dec 22 at 5:30 AM ET (TESTING)
-    - cron: '30 10 23 12 *' # Dec 23 at 5:30 AM ET (TESTING)
+    - cron: '40 10 15 12 *' # Dec 15 at 5:40 AM ET (TESTING)
+    - cron: '40 10 16 12 *' # Dec 16 at 5:40 AM ET (TESTING)
+    - cron: '40 10 17 12 *' # Dec 17 at 5:40 AM ET (TESTING)
+    - cron: '40 10 18 12 *' # Dec 18 at 5:40 AM ET (TESTING)
+    - cron: '40 10 19 12 *' # Dec 19 at 5:40 AM ET (TESTING)
+    - cron: '40 10 22 12 *' # Dec 22 at 5:40 AM ET (TESTING)
+    - cron: '40 10 23 12 *' # Dec 23 at 5:40 AM ET (TESTING)
 
 jobs:
   post-challenge:

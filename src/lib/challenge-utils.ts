@@ -56,9 +56,9 @@ export function isChallengeUnlocked(challengeDay: number): boolean {
   const decemberDate = CHALLENGE_DATES[challengeDay];
   if (!decemberDate) return false;
   
-  // TESTING: Temporarily using 5:30 AM ET instead of 12:00 PM ET
+  // TESTING: Temporarily using 5:40 AM ET instead of 12:00 PM ET
   // TODO: Change back to T12:00:00-05:00 after testing
-  const unlockDate = new Date('2025-12-' + String(decemberDate).padStart(2, '0') + 'T05:30:00-05:00');
+  const unlockDate = new Date('2025-12-' + String(decemberDate).padStart(2, '0') + 'T05:40:00-05:00');
   
   return now >= unlockDate;
 }
