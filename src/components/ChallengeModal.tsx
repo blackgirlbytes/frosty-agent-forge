@@ -4,6 +4,27 @@ import { useEffect, useState } from 'react';
 import { X, ExternalLink, MessageSquare } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
+interface Comment {
+  id: string;
+  body: string;
+  createdAt: string;
+  author: {
+    login: string;
+    avatarUrl: string;
+  };
+  replies?: {
+    nodes: Array<{
+      id: string;
+      body: string;
+      createdAt: string;
+      author: {
+        login: string;
+        avatarUrl: string;
+      };
+    }>;
+  };
+}
+
 interface ChallengeData {
   day: number;
   title: string;
@@ -11,8 +32,9 @@ interface ChallengeData {
   url: string;
   createdAt: string;
   author: string;
-  comments: number;
+  commentCount: number;
   reactions: any;
+  comments: Comment[];
 }
 
 interface ChallengeModalProps {
@@ -78,7 +100,7 @@ export const ChallengeModal = ({ day, isOpen, onClose }: ChallengeModalProps) =>
                   </h2>
                   {challenge && (
                     <p className="text-sm text-muted-foreground mt-1">
-                      Posted by {challenge.author} • {challenge.comments} comments
+                      Posted by {challenge.author} • {challenge.commentCount} comments
                     </p>
                   )}
                 </>
@@ -111,52 +133,147 @@ export const ChallengeModal = ({ day, isOpen, onClose }: ChallengeModalProps) =>
           )}
 
           {challenge && (
-            <div className="prose prose-invert prose-cyan max-w-none">
-              <ReactMarkdown
-                components={{
-                  h1: ({ children }) => (
-                    <h1 className="text-3xl font-bold text-gradient-cyan mb-4">{children}</h1>
-                  ),
-                  h2: ({ children }) => (
-                    <h2 className="text-2xl font-bold text-primary mt-8 mb-4">{children}</h2>
-                  ),
-                  h3: ({ children }) => (
-                    <h3 className="text-xl font-bold text-primary mt-6 mb-3">{children}</h3>
-                  ),
-                  p: ({ children }) => (
-                    <p className="text-muted-foreground mb-4 leading-relaxed">{children}</p>
-                  ),
-                  ul: ({ children }) => (
-                    <ul className="list-disc list-inside space-y-2 mb-4 text-muted-foreground">{children}</ul>
-                  ),
-                  ol: ({ children }) => (
-                    <ol className="list-decimal list-inside space-y-2 mb-4 text-muted-foreground">{children}</ol>
-                  ),
-                  code: ({ inline, children }: any) => 
-                    inline ? (
-                      <code className="px-1.5 py-0.5 bg-primary/10 rounded text-primary text-sm">
-                        {children}
-                      </code>
-                    ) : (
-                      <code className="block p-4 bg-primary/5 rounded-lg text-sm overflow-x-auto">
-                        {children}
-                      </code>
+            <>
+              <div className="prose prose-invert prose-cyan max-w-none">
+                <ReactMarkdown
+                  components={{
+                    h1: ({ children }) => (
+                      <h1 className="text-3xl font-bold text-gradient-cyan mb-4">{children}</h1>
                     ),
-                  a: ({ href, children }) => (
-                    <a 
-                      href={href} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-accent hover:text-accent/80 underline"
-                    >
-                      {children}
-                    </a>
-                  ),
-                }}
-              >
-                {challenge.body}
-              </ReactMarkdown>
-            </div>
+                    h2: ({ children }) => (
+                      <h2 className="text-2xl font-bold text-primary mt-8 mb-4">{children}</h2>
+                    ),
+                    h3: ({ children }) => (
+                      <h3 className="text-xl font-bold text-primary mt-6 mb-3">{children}</h3>
+                    ),
+                    p: ({ children }) => (
+                      <p className="text-muted-foreground mb-4 leading-relaxed">{children}</p>
+                    ),
+                    ul: ({ children }) => (
+                      <ul className="list-disc list-inside space-y-2 mb-4 text-muted-foreground">{children}</ul>
+                    ),
+                    ol: ({ children }) => (
+                      <ol className="list-decimal list-inside space-y-2 mb-4 text-muted-foreground">{children}</ol>
+                    ),
+                    code: ({ inline, children }: any) => 
+                      inline ? (
+                        <code className="px-1.5 py-0.5 bg-primary/10 rounded text-primary text-sm">
+                          {children}
+                        </code>
+                      ) : (
+                        <code className="block p-4 bg-primary/5 rounded-lg text-sm overflow-x-auto">
+                          {children}
+                        </code>
+                      ),
+                    a: ({ href, children }) => (
+                      <a 
+                        href={href} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-accent hover:text-accent/80 underline"
+                      >
+                        {children}
+                      </a>
+                    ),
+                  }}
+                >
+                  {challenge.body}
+                </ReactMarkdown>
+              </div>
+
+              {/* Comments Section */}
+              {challenge.comments && challenge.comments.length > 0 && (
+                <div className="mt-8 border-t border-primary/20 pt-8">
+                  <h3 className="text-xl font-bold text-primary mb-6">
+                    Solutions ({challenge.comments.length})
+                  </h3>
+                  <div className="space-y-6">
+                    {challenge.comments.map((comment) => (
+                      <div key={comment.id} className="frosted-glass rounded-lg p-4 border border-primary/10">
+                        {/* Comment Header */}
+                        <div className="flex items-center gap-3 mb-3">
+                          <img 
+                            src={comment.author.avatarUrl} 
+                            alt={comment.author.login}
+                            className="w-8 h-8 rounded-full"
+                          />
+                          <div className="flex-1">
+                            <p className="font-semibold text-primary">{comment.author.login}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {new Date(comment.createdAt).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                year: 'numeric',
+                                hour: 'numeric',
+                                minute: '2-digit'
+                              })}
+                            </p>
+                          </div>
+                        </div>
+                        
+                        {/* Comment Body */}
+                        <div className="prose prose-invert prose-sm max-w-none">
+                          <ReactMarkdown
+                            components={{
+                              p: ({ children }) => (
+                                <p className="text-muted-foreground mb-2 leading-relaxed">{children}</p>
+                              ),
+                              code: ({ inline, children }: any) => 
+                                inline ? (
+                                  <code className="px-1.5 py-0.5 bg-primary/10 rounded text-primary text-sm">
+                                    {children}
+                                  </code>
+                                ) : (
+                                  <code className="block p-3 bg-primary/5 rounded-lg text-sm overflow-x-auto my-2">
+                                    {children}
+                                  </code>
+                                ),
+                            }}
+                          >
+                            {comment.body}
+                          </ReactMarkdown>
+                        </div>
+
+                        {/* Replies */}
+                        {comment.replies && comment.replies.nodes && comment.replies.nodes.length > 0 && (
+                          <div className="mt-4 ml-6 space-y-3 border-l-2 border-primary/20 pl-4">
+                            {comment.replies.nodes.map((reply) => (
+                              <div key={reply.id} className="bg-background/50 rounded-lg p-3">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <img 
+                                    src={reply.author.avatarUrl} 
+                                    alt={reply.author.login}
+                                    className="w-6 h-6 rounded-full"
+                                  />
+                                  <p className="font-semibold text-sm text-primary">{reply.author.login}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {new Date(reply.createdAt).toLocaleDateString('en-US', {
+                                      month: 'short',
+                                      day: 'numeric'
+                                    })}
+                                  </p>
+                                </div>
+                                <div className="prose prose-invert prose-sm max-w-none">
+                                  <ReactMarkdown
+                                    components={{
+                                      p: ({ children }) => (
+                                        <p className="text-muted-foreground text-sm">{children}</p>
+                                      ),
+                                    }}
+                                  >
+                                    {reply.body}
+                                  </ReactMarkdown>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </div>
 
