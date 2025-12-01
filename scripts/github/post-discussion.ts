@@ -28,7 +28,7 @@ interface GraphQLResponse {
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const DISCUSSION_CATEGORY_ID = process.env.DISCUSSION_CATEGORY_ID;
-const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY || 'block/goose';
+const TARGET_REPOSITORY = process.env.TARGET_REPOSITORY || 'block/goose';
 const CHALLENGE_DAY = process.env.CHALLENGE_DAY || '1';
 
 if (!GITHUB_TOKEN) {
@@ -43,7 +43,7 @@ if (!DISCUSSION_CATEGORY_ID) {
   process.exit(1);
 }
 
-const [OWNER, REPO] = GITHUB_REPOSITORY.split('/');
+const [OWNER, REPO] = TARGET_REPOSITORY.split('/');
 
 // Challenge metadata
 const CHALLENGE_TITLES = [
@@ -193,7 +193,7 @@ async function main() {
   }
 
   console.log(`📅 Posting challenge for Day ${dayNum}`);
-  console.log(`📦 Repository: ${GITHUB_REPOSITORY}`);
+  console.log(`📦 Target Repository: ${TARGET_REPOSITORY}`);
 
   // Read challenge markdown file
   const markdownPath = join(process.cwd(), `challenges/day${dayNum}.md`);
