@@ -149,7 +149,10 @@ export async function GET(
       }> = [];
 
       console.log('Debug - discussionId:', discussionId);
-      console.log('Debug - GITHUB_TOKEN exists:', !!GITHUB_TOKEN);
+      console.log('Debug - GITHUB_TOKEN exists:', !!process.env.GITHUB_TOKEN);
+      console.log('Debug - DISCUSSIONS_TOKEN exists:', !!process.env.DISCUSSIONS_TOKEN);
+      console.log('Debug - Final GITHUB_TOKEN exists:', !!GITHUB_TOKEN);
+      console.log('Debug - Token length:', GITHUB_TOKEN?.length);
 
       if (discussionId && GITHUB_TOKEN) {
         try {
