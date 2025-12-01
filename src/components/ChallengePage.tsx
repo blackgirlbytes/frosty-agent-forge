@@ -173,30 +173,6 @@ export const ChallengePage = ({ day }: ChallengePageProps) => {
                 />
               </div>
 
-              {/* Action Buttons */}
-              <div className="frosted-glass rounded-2xl p-6">
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <a
-                    href={discussion.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-primary hover:bg-primary/80 text-primary-foreground rounded-xl font-semibold transition-all hover:scale-105"
-                  >
-                    <ExternalLink className="w-5 h-5" />
-                    View on GitHub
-                  </a>
-                  <a
-                    href={`${discussion.url}#discussioncomment-top`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-2 px-6 py-4 frosted-glass hover:bg-white/10 rounded-xl font-semibold transition-all hover:scale-105"
-                  >
-                    <MessageSquare className="w-5 h-5" />
-                    Join Discussion ({discussion.commentCount})
-                  </a>
-                </div>
-              </div>
-
               {/* Comments Section */}
               {discussion.comments && discussion.comments.length > 0 && (
                 <div className="frosted-glass rounded-2xl p-8 md:p-10">
@@ -285,29 +261,17 @@ export const ChallengePage = ({ day }: ChallengePageProps) => {
                 </div>
               )}
 
-              {/* Navigation */}
-              <div className="flex justify-between items-center pt-8 border-t border-white/10">
-                {day > 1 ? (
-                  <Link
-                    href={`/challenges/${day - 1}`}
-                    className="flex items-center gap-2 px-4 py-2 frosted-glass hover:bg-white/10 rounded-lg transition-colors"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                    <span className="font-medium">Day {day - 1}</span>
-                  </Link>
-                ) : (
-                  <div />
-                )}
-
-                {day < 17 && (
-                  <Link
-                    href={`/challenges/${day + 1}`}
-                    className="flex items-center gap-2 px-4 py-2 frosted-glass hover:bg-white/10 rounded-lg transition-colors"
-                  >
-                    <span className="font-medium">Day {day + 1}</span>
-                    <ArrowLeft className="w-4 h-4 rotate-180" />
-                  </Link>
-                )}
+              {/* Action Buttons */}
+              <div className="frosted-glass rounded-2xl p-6">
+                <a
+                  href="https://github.com/block/goose/discussions/categories/advent-of-ai"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 px-6 py-4 bg-primary hover:bg-primary/80 text-primary-foreground rounded-xl font-semibold transition-all hover:scale-105 w-full"
+                >
+                  <MessageSquare className="w-5 h-5" />
+                  Submit Your Solution
+                </a>
               </div>
             </div>
           )}
