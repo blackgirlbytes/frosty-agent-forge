@@ -31,6 +31,25 @@ function initializeDatabase() {
     CREATE INDEX IF NOT EXISTS idx_signups_email ON signups(email);
     CREATE INDEX IF NOT EXISTS idx_signups_subscribed ON signups(subscribed);
   `);
+
+  // Create challenges table
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS challenges (
+      id INTEGER PRIMARY KEY,
+      day INTEGER NOT NULL UNIQUE,
+      unlocked INTEGER DEFAULT 0,
+      discussion_url TEXT,
+      discussion_number INTEGER,
+      unlocked_at TEXT,
+      created_at TEXT DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  // Create index for challenges
+  db.exec(`
+    CREATE INDEX IF NOT EXISTS idx_challenges_day ON challenges(day);
+    CREATE INDEX IF NOT EXISTS idx_challenges_unlocked ON challenges(unlocked);
+  `);
 }
 
 // Initialize on import
@@ -141,6 +160,85 @@ export function getSignupStats(): {
 export function hasEmailSignedUp(email: string): boolean {
   const signup = getSignupByEmail(email);
   return signup !== undefined;
+}
+
+// ============================================
+// Challenge Operations
+// ============================================
+
+export interface Challenge {
+  id: number;
+  day: number;
+  unlocked: number;
+  discussion_url: string | null;
+  discussion_number: number | null;
+  unlocked_at: string | null;
+  created_at: string;
+}
+
+/**
+ * Get challenge by day
+ */
+export function getChallengeByDay(day: number): Challenge | undefined {
+  const stmt = db.prepare('SELECT * FROM challenges WHERE day = ?');
+  return stmt.get(day) as Challenge | undefined;
+}
+
+/**
+ * Get all challenges
+ */
+export function getAllChallenges(): Challenge[] {
+  const stmt = db.prepare('SELECT * FROM challenges ORDER BY day ASC');
+  return stmt.all() as Challenge[];
+}
+
+/**
+ * Get all unlocked challenges
+ */
+export function getUnlockedChallenges(): Challenge[] {
+  const stmt = db.prepare('SELECT * FROM challenges WHERE unlocked = 1 ORDER BY day ASC');
+  return stmt.all() as Challenge[];
+}
+
+/**
+ * Unlock a challenge
+ */
+export function unlockChallenge(
+  day: number,
+  discussionUrl: string,
+  discussionNumber: number
+): Challenge {
+  const existing = getChallengeByDay(day);
+  
+  if (existing) {
+    // Update existing challenge
+    const stmt = db.prepare(`
+      UPDATE challenges 
+      SET unlocked = 1, 
+          discussion_url = ?, 
+          discussion_number = ?,
+          unlocked_at = ?
+      WHERE day = ?
+    `);
+    stmt.run(discussionUrl, discussionNumber, new Date().toISOString(), day);
+  } else {
+    // Create new challenge
+    const stmt = db.prepare(`
+      INSERT INTO challenges (day, unlocked, discussion_url, discussion_number, unlocked_at)
+      VALUES (?, 1, ?, ?, ?)
+    `);
+    stmt.run(day, discussionUrl, discussionNumber, new Date().toISOString());
+  }
+  
+  return getChallengeByDay(day)!;
+}
+
+/**
+ * Check if challenge is unlocked
+ */
+export function isChallengeUnlocked(day: number): boolean {
+  const challenge = getChallengeByDay(day);
+  return challenge?.unlocked === 1;
 }
 
 export default db;

@@ -9,7 +9,9 @@
     "lint": "next lint",
     "signups:view": "tsx scripts/view-signups.ts",
     "signups:export": "tsx scripts/view-signups.ts --export",
-    "notify:send": "tsx scripts/send-notification.ts"
+    "notify:send": "tsx scripts/send-notification.ts",
+    "challenge:unlock": "tsx scripts/unlock-challenge.ts",
+    "challenge:get-category": "tsx scripts/get-category-id.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
