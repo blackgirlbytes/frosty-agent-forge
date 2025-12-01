@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { X, ExternalLink, MessageSquare } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
@@ -52,7 +52,7 @@ export const ChallengeModal = ({ day, isOpen, onClose }: ChallengeModalProps) =>
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchChallenge = async () => {
+  const fetchChallenge = useCallback(async () => {
     setLoading(true);
     setError(null);
     
@@ -71,7 +71,7 @@ export const ChallengeModal = ({ day, isOpen, onClose }: ChallengeModalProps) =>
     } finally {
       setLoading(false);
     }
-  };
+  }, [day]);
 
   useEffect(() => {
     if (isOpen && day) {

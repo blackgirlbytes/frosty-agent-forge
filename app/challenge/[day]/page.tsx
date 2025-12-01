@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useEffect, useState, useCallback } from 'react';
+import { useParams } from 'next/navigation';
 import { ArrowLeft, ExternalLink, MessageSquare, Loader2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import Link from 'next/link';
@@ -51,7 +51,7 @@ export default function ChallengePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchChallenge = async () => {
+  const fetchChallenge = useCallback(async () => {
     setLoading(true);
     setError(null);
     
@@ -70,11 +70,11 @@ export default function ChallengePage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [day]);
 
   useEffect(() => {
     fetchChallenge();
-  }, [day, fetchChallenge]);
+  }, [fetchChallenge]);
 
   return (
     <div className="min-h-screen bg-background">
