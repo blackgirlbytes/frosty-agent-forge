@@ -2,7 +2,7 @@ name: Unlock Challenge 2
 
 on:
   schedule:
-    - cron: '13 3 * * *'  # Runs at 8:12 AM UTC (3:12 AM ET)
+    - cron: '19 8 * * *'  # Runs at 8:12 AM UTC (3:12 AM ET)
   workflow_dispatch:  # Allows manual trigger
 
 jobs:
