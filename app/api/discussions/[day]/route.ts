@@ -148,17 +148,25 @@ export async function GET(
         url: string;
       }> = [];
 
+      console.log('Debug - discussionId:', discussionId);
+      console.log('Debug - GITHUB_TOKEN exists:', !!GITHUB_TOKEN);
+
       if (discussionId && GITHUB_TOKEN) {
         try {
+          console.log('Fetching comments for discussion:', discussionId);
           const discussion = await getDiscussionById(discussionId);
           if (discussion) {
             commentCount = discussion.comments.totalCount;
             comments = discussion.comments.nodes;
+            console.log('Successfully fetched', commentCount, 'comments');
           }
         } catch (error) {
-          console.warn('Failed to fetch comments:', error);
+          console.error('Failed to fetch comments:', error);
           // Continue without comments
         }
+      } else {
+        if (!discussionId) console.warn('No discussion ID found');
+        if (!GITHUB_TOKEN) console.warn('No GITHUB_TOKEN or DISCUSSIONS_TOKEN found');
       }
 
       return NextResponse.json({
