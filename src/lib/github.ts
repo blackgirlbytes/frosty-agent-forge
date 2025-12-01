@@ -62,6 +62,15 @@ export async function createGitHubDiscussion(
   }
 
   const repoData = await repoResponse.json();
+  
+  if (repoData.errors) {
+    throw new Error(`GitHub API error fetching repository: ${JSON.stringify(repoData.errors)}`);
+  }
+  
+  if (!repoData.data || !repoData.data.repository) {
+    throw new Error(`Repository not found or no access: ${owner}/${repo}. Response: ${JSON.stringify(repoData)}`);
+  }
+  
   const repositoryId = repoData.data.repository.id;
 
   // Create discussion using GraphQL mutation
