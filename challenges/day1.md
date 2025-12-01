@@ -12,7 +12,9 @@ Madame Zelda is panicking. The festival organizers are panicking. But you? You h
 
 Use goose's CLI to generate winter fortunes with different mystical personalities. Madame Zelda needs them fast, and she needs them good. The festival's reputation depends on it.
 
-⚠️ **You'll need:** The goose CLI (not Desktop) 
+⚠️ **You'll need:** The goose CLI (not Desktop)
+
+🎟️ **Need LLM Credits?** Sign up at [goose-credits.dev](http://goose-credits.dev/) to get free credits for Claude Sonnet 4.5 via OpenRouter! 
 
 ### Requirements
 - Generate at least 3 fortunes with different moods (grumpy, poetic, festive, sarcastic, mysterious)
