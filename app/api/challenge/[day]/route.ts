@@ -9,9 +9,10 @@ const DISCUSSION_MAP: Record<number, number> = {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { day: string } }
+  { params }: { params: Promise<{ day: string }> }
 ) {
-  const day = parseInt(params.day);
+  const { day: dayParam } = await params;
+  const day = parseInt(dayParam);
   
   if (isNaN(day) || !DISCUSSION_MAP[day]) {
     return NextResponse.json(
