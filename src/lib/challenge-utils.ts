@@ -63,7 +63,7 @@ export function isChallengeUnlocked(challengeDay: number): boolean {
   if (challengeDay === 1) {
     unlockTime = 'T05:45:00-05:00'; // Day 1: 5:45 AM ET
   } else if (challengeDay === 2) {
-    unlockTime = 'T06:43:00-05:00'; // Day 2: 6:43 AM ET (TESTING)
+    unlockTime = 'T06:55:00-05:00'; // Day 2: 6:55 AM ET (TESTING)
   }
   
   const unlockDate = new Date('2025-12-' + String(decemberDate).padStart(2, '0') + unlockTime);
