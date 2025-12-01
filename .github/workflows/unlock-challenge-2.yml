@@ -24,7 +24,7 @@ jobs:
       - name: Unlock Challenge 2
         env:
           GITHUB_TOKEN: ${{ secrets.GH_DISCUSSION_TOKEN }}
-          GITHUB_OWNER: blackgirlbytes
-          GITHUB_REPO: frosty-agent-forge
+          GITHUB_OWNER: block
+          GITHUB_REPO: goose
           GITHUB_DISCUSSION_CATEGORY_ID: ${{ secrets.DISCUSSION_CATEGORY_ID }}
         run: npm run challenge:unlock 2
