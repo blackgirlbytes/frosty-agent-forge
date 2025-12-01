@@ -29,21 +29,8 @@ export const ChallengeCalendar = () => {
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
           {challenges.map((challenge) => {
-            const Component = challenge.locked ? 'div' : Link;
-            const props = challenge.locked 
-              ? {} 
-              : { href: `/challenge/${challenge.day}` };
-            
-            return (
-              <Component
-                key={challenge.id}
-                {...props}
-                className={`aspect-square frosted-glass rounded-xl p-6 md:p-8 flex flex-col items-center justify-center group relative overflow-hidden transition-all duration-300 ${
-                  challenge.locked 
-                    ? 'cursor-not-allowed opacity-80' 
-                    : 'cursor-pointer hover:scale-105 glow-on-hover'
-                }`}
-              >
+            const content = (
+              <>
               {/* Frost overlay effect */}
               <div className="absolute inset-0 bg-gradient-frost opacity-50 group-hover:opacity-70 transition-opacity duration-300" />
               
@@ -74,7 +61,24 @@ export const ChallengeCalendar = () => {
                   <div className="absolute inset-0 bg-accent/10 blur-xl" />
                 </div>
               )}
-            </Component>
+              </>
+            );
+            
+            return challenge.locked ? (
+              <div
+                key={challenge.id}
+                className={`aspect-square frosted-glass rounded-xl p-6 md:p-8 flex flex-col items-center justify-center group relative overflow-hidden transition-all duration-300 cursor-not-allowed opacity-80`}
+              >
+                {content}
+              </div>
+            ) : (
+              <Link
+                key={challenge.id}
+                href={`/challenge/${challenge.day}`}
+                className={`aspect-square frosted-glass rounded-xl p-6 md:p-8 flex flex-col items-center justify-center group relative overflow-hidden transition-all duration-300 cursor-pointer hover:scale-105 glow-on-hover`}
+              >
+                {content}
+              </Link>
             );
           })}
         </div>
