@@ -94,79 +94,66 @@ export async function GET(
       );
     }
 
-    // Try to read discussion metadata from saved file
-    const metadataPath = join(process.cwd(), 'data', `day${day}-discussion.json`);
-    let discussionId: string;
-
+    // Read challenge content from markdown file
+    const challengePath = join(process.cwd(), 'challenges', `day${day}.md`);
+    
     try {
-      const metadata = JSON.parse(readFileSync(metadataPath, 'utf-8'));
-      discussionId = metadata.id;
-    } catch {
-      // If metadata doesn't exist, try reading from challenges file directly
-      // This is a fallback for testing before the discussion is posted
-      const challengePath = join(process.cwd(), 'challenges', `day${day}.md`);
+      const challengeContent = readFileSync(challengePath, 'utf-8');
+      const html = await marked(challengeContent);
+      
+      // Try to read discussion metadata for URL and comment count
+      const metadataPath = join(process.cwd(), 'data', `day${day}-discussion.json`);
+      let discussionUrl = `https://github.com/${GITHUB_REPOSITORY}/discussions`;
+      let discussionId: string | null = null;
+      let commentCount = 0;
       
       try {
-        const challengeContent = readFileSync(challengePath, 'utf-8');
-        const html = await marked(challengeContent);
-        
-        return NextResponse.json({
-          title: `Day ${day} Challenge`,
-          url: `https://github.com/${GITHUB_REPOSITORY}/discussions`,
-          body: html,
-          commentCount: 0,
-          author: {
-            login: 'goose-oss',
-            avatarUrl: 'https://github.com/goose-oss.png',
-          },
-          createdAt: new Date().toISOString(),
-          preview: true,
-        });
+        const metadata = JSON.parse(readFileSync(metadataPath, 'utf-8'));
+        discussionUrl = metadata.url;
+        discussionId = metadata.id;
       } catch {
-        return NextResponse.json(
-          { 
-            error: `Discussion not yet posted for Day ${day}. Check back at noon ET!`,
-            day,
-          },
-          { status: 404 }
-        );
+        // Metadata doesn't exist yet - discussion not posted
       }
-    }
 
-    // Fetch discussion from GitHub
-    if (!GITHUB_TOKEN) {
+      // If we have a discussion ID, fetch comment count from GitHub
+      if (discussionId && GITHUB_TOKEN) {
+        try {
+          const discussion = await getDiscussionById(discussionId);
+          if (discussion) {
+            commentCount = discussion.comments.totalCount;
+          }
+        } catch (error) {
+          console.warn('Failed to fetch comment count:', error);
+          // Continue without comment count
+        }
+      }
+
+      return NextResponse.json({
+        title: `Day ${day} Challenge`,
+        url: discussionUrl,
+        body: html,
+        commentCount,
+        author: {
+          login: 'goose-oss',
+          avatarUrl: 'https://github.com/goose-oss.png',
+        },
+        createdAt: new Date().toISOString(),
+      });
+    } catch {
       return NextResponse.json(
-        { error: 'GitHub token not configured' },
-        { status: 500 }
-      );
-    }
-
-    const discussion = await getDiscussionById(discussionId);
-
-    if (!discussion) {
-      return NextResponse.json(
-        { error: `Discussion not found for Day ${day}` },
+        { 
+          error: `Challenge not found for Day ${day}`,
+          day,
+        },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({
-      title: discussion.title,
-      url: discussion.url,
-      body: discussion.bodyHTML,
-      commentCount: discussion.comments.totalCount,
-      author: {
-        login: discussion.author.login,
-        avatarUrl: discussion.author.avatarUrl,
-      },
-      createdAt: discussion.createdAt,
-    });
-
   } catch (error) {
-    console.error('Error fetching discussion:', error);
+    console.error('Error loading challenge:', error);
     return NextResponse.json(
       { 
-        error: error instanceof Error ? error.message : 'Failed to fetch discussion',
+        error: error instanceof Error ? error.message : 'Failed to load challenge',
       },
       { status: 500 }
     );

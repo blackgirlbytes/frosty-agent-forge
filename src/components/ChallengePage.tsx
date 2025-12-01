@@ -18,7 +18,6 @@ interface DiscussionData {
     avatarUrl: string;
   };
   createdAt: string;
-  preview?: boolean;
 }
 
 export const ChallengePage = ({ day }: ChallengePageProps) => {
@@ -104,11 +103,6 @@ export const ChallengePage = ({ day }: ChallengePageProps) => {
                       Day {String(day).padStart(2, "0")}
                     </span>
                   </div>
-                  {discussion.preview && (
-                    <div className="frosted-glass rounded-lg px-3 py-1 border border-yellow-500/30">
-                      <span className="text-sm text-yellow-400 font-medium">Preview</span>
-                    </div>
-                  )}
                 </div>
 
                 <h1 className="text-3xl md:text-5xl font-display font-bold mb-6">
@@ -136,12 +130,10 @@ export const ChallengePage = ({ day }: ChallengePageProps) => {
                       })}
                     </span>
                   </div>
-                  {!discussion.preview && (
-                    <div className="flex items-center gap-2">
-                      <MessageSquare className="w-4 h-4" />
-                      <span>{discussion.commentCount} comments</span>
-                    </div>
-                  )}
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4" />
+                    <span>{discussion.commentCount} comments</span>
+                  </div>
                 </div>
               </div>
 
@@ -178,17 +170,15 @@ export const ChallengePage = ({ day }: ChallengePageProps) => {
                     <ExternalLink className="w-5 h-5" />
                     View on GitHub
                   </a>
-                  {!discussion.preview && (
-                    <a
-                      href={`${discussion.url}#discussioncomment-top`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center gap-2 px-6 py-4 frosted-glass hover:bg-white/10 rounded-xl font-semibold transition-all hover:scale-105"
-                    >
-                      <MessageSquare className="w-5 h-5" />
-                      Join Discussion ({discussion.commentCount})
-                    </a>
-                  )}
+                  <a
+                    href={`${discussion.url}#discussioncomment-top`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex-1 flex items-center justify-center gap-2 px-6 py-4 frosted-glass hover:bg-white/10 rounded-xl font-semibold transition-all hover:scale-105"
+                  >
+                    <MessageSquare className="w-5 h-5" />
+                    Join Discussion ({discussion.commentCount})
+                  </a>
                 </div>
               </div>
 
