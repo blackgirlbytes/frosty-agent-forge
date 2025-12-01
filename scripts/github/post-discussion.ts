@@ -27,12 +27,19 @@ interface GraphQLResponse {
 }
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+const DISCUSSION_CATEGORY_ID = process.env.DISCUSSION_CATEGORY_ID;
 const GITHUB_REPOSITORY = process.env.GITHUB_REPOSITORY || 'block/goose';
 const CHALLENGE_DAY = process.env.CHALLENGE_DAY || '1';
 
 if (!GITHUB_TOKEN) {
   console.error('❌ GITHUB_TOKEN environment variable is required');
   console.error('   Set it in your environment or .env.local file');
+  process.exit(1);
+}
+
+if (!DISCUSSION_CATEGORY_ID) {
+  console.error('❌ DISCUSSION_CATEGORY_ID environment variable is required');
+  console.error('   Set it in your GitHub repository secrets');
   process.exit(1);
 }
 
@@ -210,14 +217,14 @@ async function main() {
     }
   }
 
-  // Get repository ID
-  console.log('\n🔍 Fetching repository information...');
+  // Get repository ID (for block/goose)
+  console.log('\n🔍 Fetching block/goose repository information...');
   const repositoryId = await getRepositoryId();
   console.log(`✅ Repository ID: ${repositoryId}`);
 
-  // Get category ID
-  console.log('\n🔍 Finding "Advent of AI" discussion category...');
-  const categoryId = await getCategoryId('Advent of AI');
+  // Use category ID from environment variable
+  console.log('\n✅ Using discussion category ID from environment');
+  const categoryId = DISCUSSION_CATEGORY_ID;
   console.log(`✅ Category ID: ${categoryId}`);
 
   // Create discussion
