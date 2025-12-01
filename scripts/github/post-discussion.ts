@@ -4,6 +4,7 @@ import { join } from 'path';
 interface GraphQLResponse {
   data?: {
     repository?: {
+      id?: string;
       discussionCategories?: {
         nodes: Array<{
           id: string;
@@ -58,7 +59,7 @@ const CHALLENGE_TITLES = [
   "Day 17: The Winter Wishlist App 🎁✨",
 ];
 
-async function graphqlRequest(query: string, variables: Record<string, any>): Promise<GraphQLResponse> {
+async function graphqlRequest(query: string, variables: Record<string, unknown>): Promise<GraphQLResponse> {
   const response = await fetch('https://api.github.com/graphql', {
     method: 'POST',
     headers: {
