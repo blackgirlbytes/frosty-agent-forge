@@ -1,9 +1,9 @@
-name: Unlock Challenge 3
+name: Daily Challenge Unlock
 
 on:
   schedule:
-    - cron: '57 8 * * *'  # Runs at 8:35 AM UTC (3:35 AM ET) - 3 minutes after challenge 2
-  workflow_dispatch:  # Allows manual trigger
+    - cron: '4 9 * * *'  # TEST: Runs at 9:04 AM UTC (4:04 AM ET) - change to '0 17 * * *' for production
+  workflow_dispatch:  # Allows manual trigger for testing
 
 jobs:
   unlock:
@@ -21,10 +21,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-      - name: Unlock Challenge 3
+      - name: Unlock Today's Challenge
         env:
           GITHUB_TOKEN: ${{ secrets.GH_DISCUSSION_TOKEN }}
           GITHUB_OWNER: block
           GITHUB_REPO: goose
           GITHUB_DISCUSSION_CATEGORY_ID: ${{ secrets.DISCUSSION_CATEGORY_ID }}
-        run: npm run challenge:unlock 3
+        run: npm run challenge:unlock-daily

@@ -11,6 +11,7 @@
     "signups:export": "tsx scripts/view-signups.ts --export",
     "notify:send": "tsx scripts/send-notification.ts",
     "challenge:unlock": "tsx scripts/unlock-challenge.ts",
+    "challenge:unlock-daily": "tsx scripts/unlock-daily-challenge.ts",
     "challenge:get-category": "tsx scripts/get-category-id.ts"
   },
   "dependencies": {
