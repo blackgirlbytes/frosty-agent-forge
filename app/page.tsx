@@ -1,10 +1,17 @@
 import { Hero } from "@/components/Hero";
-import { VideoSection } from "@/components/VideoSection";
+// import { VideoSection } from "@/components/VideoSection";
 import { Countdown } from "@/components/Countdown";
 import { ChallengeCalendar } from "@/components/ChallengeCalendar";
 import { Footer } from "@/components/Footer";
+import { LockedChallengeNotice } from "@/components/LockedChallengeNotice";
 
-export default function Home() {
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ locked?: string }>;
+}) {
+  const { locked } = await searchParams;
+  
   return (
     <div className="min-h-screen bg-background relative">
       {/* Subtle background pattern */}
@@ -12,9 +19,10 @@ export default function Home() {
       
       <div className="relative z-10">
         <Hero />
+        {locked && <LockedChallengeNotice day={parseInt(locked)} />}
         <Countdown />
         <ChallengeCalendar />
-        <VideoSection />
+        {/* <VideoSection /> */}
         <Footer />
       </div>
     </div>
