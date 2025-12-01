@@ -1,13 +1,9 @@
 'use client';
 
-import { useState } from "react";
 import { Lock, Unlock } from "lucide-react";
-import { ChallengeModal } from "./ChallengeModal";
+import Link from "next/link";
 
 export const ChallengeCalendar = () => {
-  const [selectedDay, setSelectedDay] = useState<number | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
   // Generate 17 challenges (weekdays Dec 1-23)
   // Map challenge numbers to actual December dates (weekdays only)
   const weekdayDates = [1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 15, 16, 17, 18, 19, 22, 23];
@@ -18,13 +14,6 @@ export const ChallengeCalendar = () => {
     date: weekdayDates[i],
     locked: i !== 0, // Unlock Day 1 for testing (i === 0 means Day 1)
   }));
-
-  const handleChallengeClick = (challenge: typeof challenges[0]) => {
-    if (!challenge.locked) {
-      setSelectedDay(challenge.day);
-      setIsModalOpen(true);
-    }
-  };
 
   return (
     <section className="py-20 px-4">
@@ -39,17 +28,22 @@ export const ChallengeCalendar = () => {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-          {challenges.map((challenge) => (
-            <button
-              key={challenge.id}
-              onClick={() => handleChallengeClick(challenge)}
-              disabled={challenge.locked}
-              className={`aspect-square frosted-glass rounded-xl p-6 md:p-8 flex flex-col items-center justify-center group relative overflow-hidden transition-all duration-300 ${
-                challenge.locked 
-                  ? 'cursor-not-allowed opacity-80' 
-                  : 'cursor-pointer hover:scale-105 glow-on-hover'
-              }`}
-            >
+          {challenges.map((challenge) => {
+            const Component = challenge.locked ? 'div' : Link;
+            const props = challenge.locked 
+              ? {} 
+              : { href: `/challenge/${challenge.day}` };
+            
+            return (
+              <Component
+                key={challenge.id}
+                {...props}
+                className={`aspect-square frosted-glass rounded-xl p-6 md:p-8 flex flex-col items-center justify-center group relative overflow-hidden transition-all duration-300 ${
+                  challenge.locked 
+                    ? 'cursor-not-allowed opacity-80' 
+                    : 'cursor-pointer hover:scale-105 glow-on-hover'
+                }`}
+              >
               {/* Frost overlay effect */}
               <div className="absolute inset-0 bg-gradient-frost opacity-50 group-hover:opacity-70 transition-opacity duration-300" />
               
@@ -80,8 +74,9 @@ export const ChallengeCalendar = () => {
                   <div className="absolute inset-0 bg-accent/10 blur-xl" />
                 </div>
               )}
-            </button>
-          ))}
+            </Component>
+            );
+          })}
         </div>
 
         <div className="mt-12 text-center">
@@ -90,18 +85,6 @@ export const ChallengeCalendar = () => {
           </p>
         </div>
       </div>
-
-      {/* Challenge Modal */}
-      {selectedDay !== null && (
-        <ChallengeModal
-          day={selectedDay}
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setSelectedDay(null);
-          }}
-        />
-      )}
     </section>
   );
 };
