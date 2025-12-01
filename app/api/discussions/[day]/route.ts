@@ -21,6 +21,17 @@ interface GraphQLResponse {
       };
       comments: {
         totalCount: number;
+        nodes: Array<{
+          id: string;
+          bodyHTML: string;
+          createdAt: string;
+          author: {
+            login: string;
+            avatarUrl: string;
+            url: string;
+          };
+          url: string;
+        }>;
       };
     };
   };
@@ -62,8 +73,19 @@ async function getDiscussionById(discussionId: string) {
             login
             avatarUrl
           }
-          comments {
+          comments(first: 5) {
             totalCount
+            nodes {
+              id
+              bodyHTML
+              createdAt
+              author {
+                login
+                avatarUrl
+                url
+              }
+              url
+            }
           }
         }
       }
@@ -115,16 +137,29 @@ export async function GET(
         // Metadata doesn't exist yet - discussion not posted
       }
 
-      // If we have a discussion ID, fetch comment count from GitHub
+      // If we have a discussion ID, fetch comments from GitHub
+      let comments: Array<{
+        id: string;
+        bodyHTML: string;
+        createdAt: string;
+        author: {
+          login: string;
+          avatarUrl: string;
+          url: string;
+        };
+        url: string;
+      }> = [];
+
       if (discussionId && GITHUB_TOKEN) {
         try {
           const discussion = await getDiscussionById(discussionId);
           if (discussion) {
             commentCount = discussion.comments.totalCount;
+            comments = discussion.comments.nodes;
           }
         } catch (error) {
-          console.warn('Failed to fetch comment count:', error);
-          // Continue without comment count
+          console.warn('Failed to fetch comments:', error);
+          // Continue without comments
         }
       }
 
@@ -133,6 +168,7 @@ export async function GET(
         url: discussionUrl,
         body: html,
         commentCount,
+        comments,
         author: {
           login: 'goose-oss',
           avatarUrl: 'https://github.com/goose-oss.png',
