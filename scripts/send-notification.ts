@@ -11,6 +11,7 @@
 import sgMail from '@sendgrid/mail';
 import { getSubscribedEmails, getSignupStats } from '../src/lib/db';
 import * as dotenv from 'dotenv';
+import { execSync } from 'child_process';
 
 // Load environment variables
 dotenv.config({ path: '.env.local' });
@@ -185,9 +186,42 @@ function getChallengeUnlockTemplate(day: number): EmailTemplate {
 }
 
 /**
+ * Fetch emails from Railway database
+ */
+function getEmailsFromRailway(): string[] {
+  try {
+    console.log('📡 Fetching emails from Railway database...');
+    const command = `railway ssh "node -e \\"const db = require('better-sqlite3')('./data/signups.db'); const rows = db.prepare('SELECT email FROM signups WHERE subscribed = 1').all(); console.log(JSON.stringify(rows.map(r => r.email))); db.close();\\""`;
+    
+    const output = execSync(command, { encoding: 'utf-8' });
+    const emails = JSON.parse(output.trim());
+    console.log(`✅ Fetched ${emails.length} subscribed emails from Railway`);
+    return emails;
+  } catch (error: any) {
+    console.error('❌ Failed to fetch emails from Railway:', error.message);
+    throw error;
+  }
+}
+
+/**
+ * Get signup statistics from Railway
+ */
+function getStatsFromRailway(): { total: number; subscribed: number; unsubscribed: number } {
+  try {
+    const command = `railway ssh "node -e \\"const db = require('better-sqlite3')('./data/signups.db'); const total = db.prepare('SELECT COUNT(*) as count FROM signups').get().count; const subscribed = db.prepare('SELECT COUNT(*) as count FROM signups WHERE subscribed = 1').get().count; console.log(JSON.stringify({ total, subscribed, unsubscribed: total - subscribed })); db.close();\\""`;
+    
+    const output = execSync(command, { encoding: 'utf-8' });
+    return JSON.parse(output.trim());
+  } catch (error: any) {
+    console.error('⚠️  Failed to fetch stats from Railway:', error.message);
+    return { total: 0, subscribed: 0, unsubscribed: 0 };
+  }
+}
+
+/**
  * Send notification emails to all subscribed users
  */
-async function sendNotifications(day: number = 1) {
+async function sendNotifications(day: number = 1, useRailway: boolean = false) {
   const sendgridApiKey = process.env.SENDGRID_API_KEY;
   const fromEmail = process.env.FROM_EMAIL || 'noreply@adventofai.dev';
 
@@ -199,9 +233,17 @@ async function sendNotifications(day: number = 1) {
   sgMail.setApiKey(sendgridApiKey);
 
   // Get all subscribed emails
-  console.log('📋 Fetching subscribed emails...');
-  const emails = getSubscribedEmails();
-  const stats = getSignupStats();
+  let emails: string[];
+  let stats: { total: number; subscribed: number; unsubscribed: number };
+
+  if (useRailway) {
+    emails = getEmailsFromRailway();
+    stats = getStatsFromRailway();
+  } else {
+    console.log('📋 Fetching subscribed emails from local database...');
+    emails = getSubscribedEmails();
+    stats = getSignupStats();
+  }
 
   console.log(`\n📊 Signup Statistics:`);
   console.log(`   Total signups: ${stats.total}`);
@@ -253,12 +295,16 @@ async function sendNotifications(day: number = 1) {
 const args = process.argv.slice(2);
 const dayArg = args.find(arg => arg.startsWith('--day='));
 const day = dayArg ? parseInt(dayArg.split('=')[1]) : 1;
+const useRailway = args.includes('--railway');
 
 // Run the script
 console.log(`\n🎄 Advent of AI - Notification Sender`);
 console.log(`📅 Sending Day ${day} notifications...\n`);
+if (useRailway) {
+  console.log('🚂 Using Railway database\n');
+}
 
-sendNotifications(day)
+sendNotifications(day, useRailway)
   .then(() => {
     console.log('\n✅ Done!');
     process.exit(0);
