@@ -78,6 +78,14 @@ jobs:
         run: |
           npx tsx scripts/github/post-discussion.ts
       
+      - name: Commit discussion metadata
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add data/day${{ steps.determine-day.outputs.day }}-discussion.json
+          git commit -m "feat: Add Day ${{ steps.determine-day.outputs.day }} discussion metadata [skip ci]" || echo "No changes to commit"
+          git push
+      
       - name: Notify on failure
         if: failure()
         uses: actions/github-script@v7
