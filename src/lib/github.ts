@@ -158,8 +158,14 @@ export async function getDiscussionCategoryId(
     throw new Error(`GitHub API error: ${JSON.stringify(data.errors)}`);
   }
 
-  const categories = data.data.repository.discussionCategories.nodes;
-  const category = categories.find((cat: any) => cat.name === categoryName);
+  interface Category {
+    id: string;
+    name: string;
+    slug: string;
+  }
+
+  const categories = data.data.repository.discussionCategories.nodes as Category[];
+  const category = categories.find((cat: Category) => cat.name === categoryName);
 
   return category ? category.id : null;
 }
