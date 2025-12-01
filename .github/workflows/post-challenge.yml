@@ -72,7 +72,7 @@ jobs:
       - name: Post to GitHub Discussions
         env:
           GITHUB_TOKEN: ${{ secrets.DISCUSSIONS_TOKEN }}
-          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_REPOSITORY: block/goose
           CHALLENGE_DAY: ${{ steps.determine-day.outputs.day }}
         run: |
           npx tsx scripts/github/post-discussion.ts
