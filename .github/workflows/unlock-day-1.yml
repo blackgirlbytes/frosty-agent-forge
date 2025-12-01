@@ -10,21 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      
-      - name: Install dependencies
-        run: npm ci
-      
       - name: Unlock Challenge Day 1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_DISCUSSION_TOKEN }}
-          GITHUB_OWNER: block
-          GITHUB_REPO: goose
-          GITHUB_DISCUSSION_CATEGORY_ID: ${{ secrets.DISCUSSION_CATEGORY_ID }}
-        run: npm run challenge:unlock 1
+        run: |
+          curl -X POST https://frosty-agent-forge-production-38e3.up.railway.app/api/unlock \
+            -H "Content-Type: application/json" \
+            -d '{"day": 1, "secret": "${{ secrets.UNLOCK_SECRET }}"}'
