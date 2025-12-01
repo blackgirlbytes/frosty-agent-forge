@@ -26,6 +26,7 @@ Use [goose's](https://block.github.io/goose/docs/guides/running-tasks) CLI to ge
 
 Sign up at [goose-credits.dev](http://goose-credits.dev/) to get free credits for Claude Sonnet 4.5 via OpenRouter! 
 
+**Use the ACCESS CODE: `ADVENTDAY1`**
 
 ### Example Output
 ```
