@@ -5,7 +5,6 @@ import { marked } from 'marked';
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || process.env.DISCUSSIONS_TOKEN;
 const GITHUB_REPOSITORY = 'block/goose';
-const [OWNER, REPO] = GITHUB_REPOSITORY.split('/');
 
 interface GraphQLResponse {
   data?: {
@@ -31,7 +30,7 @@ interface GraphQLResponse {
   }>;
 }
 
-async function graphqlRequest(query: string, variables: Record<string, any>): Promise<GraphQLResponse> {
+async function graphqlRequest(query: string, variables: Record<string, unknown>): Promise<GraphQLResponse> {
   const response = await fetch('https://api.github.com/graphql', {
     method: 'POST',
     headers: {
@@ -101,7 +100,7 @@ export async function GET(
     try {
       const metadata = JSON.parse(readFileSync(metadataPath, 'utf-8'));
       discussionId = metadata.id;
-    } catch (error) {
+    } catch {
       // If metadata doesn't exist, try reading from challenges file directly
       // This is a fallback for testing before the discussion is posted
       const challengePath = join(process.cwd(), 'challenges', `day${day}.md`);
@@ -122,7 +121,7 @@ export async function GET(
           createdAt: new Date().toISOString(),
           preview: true,
         });
-      } catch (fallbackError) {
+      } catch {
         return NextResponse.json(
           { 
             error: `Discussion not yet posted for Day ${day}. Check back at noon ET!`,
