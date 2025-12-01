@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getAllChallenges } from '@/lib/db';
 
+// Force dynamic route - don't cache
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 // API endpoint to get challenge unlock status
 export async function GET() {
   try {
