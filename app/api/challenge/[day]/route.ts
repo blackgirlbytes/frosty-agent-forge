@@ -35,8 +35,12 @@ export async function GET(
     console.log('🌐 [API] Fetching from:', apiUrl);
     
     // Fetch discussion from GitHub API
-    // TEMPORARY: Hardcoded token for testing
-    const token = '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';
+    const token = process.env.GITHUB_TOKEN;
+    if (!token) {
+      console.error('❌ [API] GITHUB_TOKEN not configured');
+      throw new Error('GitHub token not configured');
+    }
+    
     const response = await fetch(apiUrl, {
       headers: {
         'Accept': 'application/vnd.github+json',
