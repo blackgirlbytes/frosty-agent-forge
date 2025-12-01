@@ -2,18 +2,55 @@
 
 import { Lock, Unlock } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+
+interface UnlockStatus {
+  [day: number]: {
+    unlocked: boolean;
+    discussionUrl: string | null;
+    discussionNumber: number | null;
+    unlockedAt: string | null;
+  };
+}
 
 export const ChallengeCalendar = () => {
+  const [unlockStatus, setUnlockStatus] = useState<UnlockStatus>({});
+  const [loading, setLoading] = useState(true);
+
+  // Fetch unlock status from API
+  useEffect(() => {
+    async function fetchUnlockStatus() {
+      try {
+        const response = await fetch('/api/challenges');
+        if (response.ok) {
+          const data = await response.json();
+          setUnlockStatus(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch unlock status:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchUnlockStatus();
+  }, []);
+
   // Generate 17 challenges (weekdays Dec 1-23)
   // Map challenge numbers to actual December dates (weekdays only)
   const weekdayDates = [1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 15, 16, 17, 18, 19, 22, 23];
   
-  const challenges = Array.from({ length: 17 }, (_, i) => ({
-    id: i + 1,
-    day: i + 1,
-    date: weekdayDates[i],
-    locked: i !== 0, // Unlock Day 1 for testing (i === 0 means Day 1)
-  }));
+  const challenges = Array.from({ length: 17 }, (_, i) => {
+    const day = i + 1;
+    const isUnlocked = unlockStatus[day]?.unlocked || false;
+    
+    return {
+      id: day,
+      day: day,
+      date: weekdayDates[i],
+      locked: !isUnlocked,
+    };
+  });
 
   return (
     <section className="py-20 px-4">
