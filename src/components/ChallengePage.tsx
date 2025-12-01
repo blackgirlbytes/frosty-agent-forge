@@ -13,6 +13,17 @@ interface DiscussionData {
   url: string;
   body: string;
   commentCount: number;
+  comments: Array<{
+    id: string;
+    bodyHTML: string;
+    createdAt: string;
+    author: {
+      login: string;
+      avatarUrl: string;
+      url: string;
+    };
+    url: string;
+  }>;
   author: {
     login: string;
     avatarUrl: string;
@@ -181,6 +192,94 @@ export const ChallengePage = ({ day }: ChallengePageProps) => {
                   </a>
                 </div>
               </div>
+
+              {/* Comments Section */}
+              {discussion.comments && discussion.comments.length > 0 && (
+                <div className="frosted-glass rounded-2xl p-8 md:p-10">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-display font-bold">
+                      Recent Comments
+                    </h2>
+                    <span className="text-sm text-muted-foreground">
+                      Showing {discussion.comments.length} of {discussion.commentCount}
+                    </span>
+                  </div>
+
+                  <div className="space-y-6">
+                    {discussion.comments.map((comment) => (
+                      <div key={comment.id} className="border-t border-white/10 pt-6 first:border-t-0 first:pt-0">
+                        <div className="flex items-start gap-4">
+                          <a
+                            href={comment.author.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex-shrink-0"
+                          >
+                            <img
+                              src={comment.author.avatarUrl}
+                              alt={comment.author.login}
+                              className="w-10 h-10 rounded-full border-2 border-primary/20 hover:border-primary/50 transition-colors"
+                            />
+                          </a>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 mb-2">
+                              <a
+                                href={comment.author.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="font-semibold text-foreground hover:text-primary transition-colors"
+                              >
+                                {comment.author.login}
+                              </a>
+                              <span className="text-sm text-muted-foreground">
+                                {new Date(comment.createdAt).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric',
+                                })}
+                              </span>
+                            </div>
+                            <div
+                              className="prose prose-invert prose-sm max-w-none
+                                prose-p:text-muted-foreground prose-p:leading-relaxed
+                                prose-a:text-primary prose-a:no-underline hover:prose-a:underline
+                                prose-strong:text-foreground
+                                prose-code:text-accent prose-code:bg-accent/10 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-sm
+                                prose-pre:bg-muted/50 prose-pre:border prose-pre:border-white/10 prose-pre:text-sm
+                                prose-ul:text-muted-foreground prose-ol:text-muted-foreground
+                                prose-li:marker:text-primary"
+                              dangerouslySetInnerHTML={{ __html: comment.bodyHTML }}
+                            />
+                            <a
+                              href={comment.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 mt-2 text-sm text-muted-foreground hover:text-primary transition-colors"
+                            >
+                              View on GitHub
+                              <ExternalLink className="w-3 h-3" />
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {discussion.commentCount > 5 && (
+                    <div className="mt-6 pt-6 border-t border-white/10 text-center">
+                      <a
+                        href={discussion.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-6 py-3 frosted-glass hover:bg-white/10 rounded-lg transition-colors font-medium"
+                      >
+                        View all {discussion.commentCount} comments on GitHub
+                        <ExternalLink className="w-4 h-4" />
+                      </a>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* Navigation */}
               <div className="flex justify-between items-center pt-8 border-t border-white/10">
