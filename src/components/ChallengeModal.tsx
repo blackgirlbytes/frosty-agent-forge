@@ -25,6 +25,10 @@ interface Comment {
   };
 }
 
+interface Reactions {
+  [key: string]: number;
+}
+
 interface ChallengeData {
   day: number;
   title: string;
@@ -33,7 +37,7 @@ interface ChallengeData {
   createdAt: string;
   author: string;
   commentCount: number;
-  reactions: any;
+  reactions: Reactions;
   comments: Comment[];
 }
 
@@ -47,12 +51,6 @@ export const ChallengeModal = ({ day, isOpen, onClose }: ChallengeModalProps) =>
   const [challenge, setChallenge] = useState<ChallengeData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (isOpen && day) {
-      fetchChallenge();
-    }
-  }, [isOpen, day]);
 
   const fetchChallenge = async () => {
     setLoading(true);
@@ -74,6 +72,12 @@ export const ChallengeModal = ({ day, isOpen, onClose }: ChallengeModalProps) =>
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (isOpen && day) {
+      fetchChallenge();
+    }
+  }, [isOpen, day, fetchChallenge]);
 
   if (!isOpen) return null;
 
@@ -155,7 +159,7 @@ export const ChallengeModal = ({ day, isOpen, onClose }: ChallengeModalProps) =>
                     ol: ({ children }) => (
                       <ol className="list-decimal list-inside space-y-2 mb-4 text-muted-foreground">{children}</ol>
                     ),
-                    code: ({ inline, children }: any) => 
+                    code: ({ inline, children }: { inline?: boolean; children?: React.ReactNode }) => 
                       inline ? (
                         <code className="px-1.5 py-0.5 bg-primary/10 rounded text-primary text-sm">
                           {children}
@@ -218,7 +222,7 @@ export const ChallengeModal = ({ day, isOpen, onClose }: ChallengeModalProps) =>
                               p: ({ children }) => (
                                 <p className="text-muted-foreground mb-2 leading-relaxed">{children}</p>
                               ),
-                              code: ({ inline, children }: any) => 
+                              code: ({ inline, children }: { inline?: boolean; children?: React.ReactNode }) => 
                                 inline ? (
                                   <code className="px-1.5 py-0.5 bg-primary/10 rounded text-primary text-sm">
                                     {children}

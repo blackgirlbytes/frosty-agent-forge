@@ -27,6 +27,10 @@ interface Comment {
   };
 }
 
+interface Reactions {
+  [key: string]: number;
+}
+
 interface ChallengeData {
   day: number;
   title: string;
@@ -35,22 +39,17 @@ interface ChallengeData {
   createdAt: string;
   author: string;
   commentCount: number;
-  reactions: any;
+  reactions: Reactions;
   comments: Comment[];
 }
 
 export default function ChallengePage() {
   const params = useParams();
-  const router = useRouter();
   const day = params.day as string;
   
   const [challenge, setChallenge] = useState<ChallengeData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetchChallenge();
-  }, [day]);
 
   const fetchChallenge = async () => {
     setLoading(true);
@@ -72,6 +71,10 @@ export default function ChallengePage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchChallenge();
+  }, [day, fetchChallenge]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -153,7 +156,7 @@ export default function ChallengePage() {
                     ol: ({ children }) => (
                       <ol className="list-decimal list-inside space-y-2 mb-4 text-muted-foreground">{children}</ol>
                     ),
-                    code: ({ inline, children }: any) => 
+                    code: ({ inline, children }: { inline?: boolean; children?: React.ReactNode }) => 
                       inline ? (
                         <code className="px-1.5 py-0.5 bg-primary/10 rounded text-primary text-sm">
                           {children}
@@ -236,7 +239,7 @@ export default function ChallengePage() {
                             p: ({ children }) => (
                               <p className="text-muted-foreground mb-2 leading-relaxed">{children}</p>
                             ),
-                            code: ({ inline, children }: any) => 
+                            code: ({ inline, children }: { inline?: boolean; children?: React.ReactNode }) => 
                               inline ? (
                                 <code className="px-1.5 py-0.5 bg-primary/10 rounded text-primary text-sm">
                                   {children}
