@@ -5,11 +5,13 @@ import { ChallengeCalendar } from "@/components/ChallengeCalendar";
 import { Footer } from "@/components/Footer";
 import { LockedChallengeNotice } from "@/components/LockedChallengeNotice";
 
-export default function Home({
+export default async function Home({
   searchParams,
 }: {
-  searchParams: { locked?: string };
+  searchParams: Promise<{ locked?: string }>;
 }) {
+  const { locked } = await searchParams;
+  
   return (
     <div className="min-h-screen bg-background relative">
       {/* Subtle background pattern */}
@@ -17,7 +19,7 @@ export default function Home({
       
       <div className="relative z-10">
         <Hero />
-        {searchParams.locked && <LockedChallengeNotice day={parseInt(searchParams.locked)} />}
+        {locked && <LockedChallengeNotice day={parseInt(locked)} />}
         <Countdown />
         <ChallengeCalendar />
         <VideoSection />
