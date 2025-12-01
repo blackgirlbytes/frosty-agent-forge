@@ -152,9 +152,7 @@ export const ChallengePage = ({ day }: ChallengePageProps) => {
 
               {/* Challenge Content */}
               <div className="frosted-glass rounded-2xl p-8 md:p-10">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  className="prose prose-invert prose-cyan prose-lg max-w-none
+                <div className="prose prose-invert prose-cyan prose-lg max-w-none
                     prose-headings:font-display prose-headings:font-bold prose-headings:text-foreground
                     prose-h1:text-4xl prose-h1:mb-6 prose-h1:mt-0
                     prose-h2:text-3xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:border-b prose-h2:border-white/10 prose-h2:pb-3
@@ -171,10 +169,11 @@ export const ChallengePage = ({ day }: ChallengePageProps) => {
                     prose-hr:border-white/10 prose-hr:my-8
                     prose-table:border-collapse prose-table:w-full
                     prose-th:border prose-th:border-white/10 prose-th:bg-white/5 prose-th:p-3 prose-th:text-left prose-th:font-semibold
-                    prose-td:border prose-td:border-white/10 prose-td:p-3"
-                >
-                  {discussion.body}
-                </ReactMarkdown>
+                    prose-td:border prose-td:border-white/10 prose-td:p-3">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {discussion.body}
+                  </ReactMarkdown>
+                </div>
               </div>
 
               {/* Comments Section */}
