@@ -1,16 +1,20 @@
-import { Lock } from "lucide-react";
+"use client";
+
+import Link from "next/link";
+import { Lock, Unlock } from "lucide-react";
+import { CHALLENGE_DATES, isChallengeUnlocked } from "@/lib/challenge-utils";
 
 export const ChallengeCalendar = () => {
   // Generate 17 challenges (weekdays Dec 1-23)
-  // Map challenge numbers to actual December dates (weekdays only)
-  const weekdayDates = [1, 2, 3, 4, 5, 8, 9, 10, 11, 12, 15, 16, 17, 18, 19, 22, 23];
-  
-  const challenges = Array.from({ length: 17 }, (_, i) => ({
-    id: i + 1,
-    day: i + 1,
-    date: weekdayDates[i],
-    locked: true,
-  }));
+  const challenges = Array.from({ length: 17 }, (_, i) => {
+    const day = i + 1;
+    return {
+      id: day,
+      day,
+      date: CHALLENGE_DATES[day],
+      locked: !isChallengeUnlocked(day),
+    };
+  });
 
   return (
     <section className="py-20 px-4">
@@ -25,33 +29,62 @@ export const ChallengeCalendar = () => {
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-          {challenges.map((challenge) => (
-            <div
-              key={challenge.id}
-              className="aspect-square frosted-glass glow-on-hover rounded-xl p-6 md:p-8 flex flex-col items-center justify-center cursor-not-allowed group relative overflow-hidden"
-            >
-              {/* Frost overlay effect */}
-              <div className="absolute inset-0 bg-gradient-frost opacity-50 group-hover:opacity-70 transition-opacity duration-300" />
-              
-              <div className="relative z-10 flex flex-col items-center justify-center h-full gap-1">
-                <Lock className="w-7 h-7 md:w-8 md:h-8 text-primary mb-2 group-hover:text-accent transition-colors duration-300" />
-                <span className="font-display text-3xl md:text-4xl font-bold text-gradient-cyan">
-                  {String(challenge.day).padStart(2, "0")}
-                </span>
-                <span className="text-sm md:text-base text-muted-foreground/80 font-medium">
-                  DEC {challenge.date}
-                </span>
-                <span className="text-xs text-muted-foreground mt-1 uppercase tracking-wider">
-                  Locked
-                </span>
-              </div>
+          {challenges.map((challenge) => {
+            const ChallengeCard = (
+              <div
+                className={`aspect-square frosted-glass rounded-xl p-6 md:p-8 flex flex-col items-center justify-center group relative overflow-hidden transition-all duration-300 ${
+                  challenge.locked
+                    ? 'cursor-not-allowed opacity-80'
+                    : 'cursor-pointer hover:scale-105 hover:shadow-2xl glow-on-hover'
+                }`}
+              >
+                {/* Frost overlay effect */}
+                <div className={`absolute inset-0 transition-opacity duration-300 ${
+                  challenge.locked 
+                    ? 'bg-gradient-frost opacity-50 group-hover:opacity-70' 
+                    : 'bg-gradient-to-br from-primary/20 to-accent/20 opacity-30 group-hover:opacity-50'
+                }`} />
+                
+                <div className="relative z-10 flex flex-col items-center justify-center h-full gap-1">
+                  {challenge.locked ? (
+                    <Lock className="w-7 h-7 md:w-8 md:h-8 text-primary mb-2 group-hover:text-accent transition-colors duration-300" />
+                  ) : (
+                    <Unlock className="w-7 h-7 md:w-8 md:h-8 text-accent mb-2 group-hover:scale-110 transition-transform duration-300" />
+                  )}
+                  <span className={`font-display text-3xl md:text-4xl font-bold ${
+                    challenge.locked ? 'text-gradient-cyan' : 'text-gradient-cyan animate-pulse'
+                  }`}>
+                    {String(challenge.day).padStart(2, "0")}
+                  </span>
+                  <span className="text-sm md:text-base text-muted-foreground/80 font-medium">
+                    DEC {challenge.date}
+                  </span>
+                  <span className={`text-xs mt-1 uppercase tracking-wider font-semibold ${
+                    challenge.locked ? 'text-muted-foreground' : 'text-accent'
+                  }`}>
+                    {challenge.locked ? 'Locked' : 'Unlocked'}
+                  </span>
+                </div>
 
-              {/* Glow effect on hover */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-                <div className="absolute inset-0 bg-primary/5 blur-xl" />
+                {/* Glow effect on hover */}
+                {!challenge.locked && (
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                    <div className="absolute inset-0 bg-accent/10 blur-xl" />
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
+            );
+
+            return challenge.locked ? (
+              <div key={challenge.id}>
+                {ChallengeCard}
+              </div>
+            ) : (
+              <Link key={challenge.id} href={`/challenges/${challenge.day}`}>
+                {ChallengeCard}
+              </Link>
+            );
+          })}
         </div>
 
         <div className="mt-12 text-center">

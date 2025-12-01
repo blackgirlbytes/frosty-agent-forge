@@ -9,7 +9,9 @@
     "lint": "next lint",
     "signups:view": "tsx scripts/view-signups.ts",
     "signups:export": "tsx scripts/view-signups.ts --export",
-    "notify:send": "tsx scripts/send-notification.ts"
+    "notify:send": "tsx scripts/send-notification.ts",
+    "challenge:post": "tsx scripts/github/post-discussion.ts",
+    "challenge:test": "CHALLENGE_DAY=1 tsx scripts/github/post-discussion.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -52,14 +54,17 @@
     "embla-carousel-react": "^8.6.0",
     "input-otp": "^1.4.2",
     "lucide-react": "^0.462.0",
+    "marked": "^11.1.1",
     "next": "^15.0.3",
     "next-themes": "^0.3.0",
     "react": "^18.3.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.61.1",
+    "react-markdown": "^10.1.0",
     "react-resizable-panels": "^2.1.9",
     "recharts": "^2.15.4",
+    "remark-gfm": "^4.0.1",
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
