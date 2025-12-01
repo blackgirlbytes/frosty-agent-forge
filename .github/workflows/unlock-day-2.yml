@@ -1,0 +1,30 @@
+name: Unlock Day 2
+
+on:
+  schedule:
+    - cron: '0 17 2 12 *'  # Dec 2 at 12 PM ET (5 PM UTC)
+  workflow_dispatch:  # Manual trigger for testing
+
+jobs:
+  unlock:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Unlock Challenge Day 2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_DISCUSSION_TOKEN }}
+          GITHUB_OWNER: block
+          GITHUB_REPO: goose
+          GITHUB_DISCUSSION_CATEGORY_ID: ${{ secrets.DISCUSSION_CATEGORY_ID }}
+        run: npm run challenge:unlock 2
