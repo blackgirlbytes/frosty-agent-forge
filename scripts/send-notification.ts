@@ -12,6 +12,8 @@ import sgMail from '@sendgrid/mail';
 import { getSubscribedEmails, getSignupStats } from '../src/lib/db';
 import * as dotenv from 'dotenv';
 import { execSync } from 'child_process';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 // Load environment variables
 dotenv.config({ path: '.env.local' });
@@ -186,6 +188,45 @@ function getChallengeUnlockTemplate(day: number): EmailTemplate {
 }
 
 /**
+ * Fetch emails from JSON file
+ */
+function getEmailsFromJson(): string[] {
+  try {
+    console.log('📋 Reading emails from JSON file...');
+    const jsonPath = join(process.cwd(), 'data', 'signups-list.json');
+    const signups = JSON.parse(readFileSync(jsonPath, 'utf-8'));
+    const emails = signups
+      .filter((signup: any) => signup.subscribed === 1)
+      .map((signup: any) => signup.email);
+    console.log(`✅ Found ${emails.length} subscribed emails in JSON file`);
+    return emails;
+  } catch (error: any) {
+    console.error('❌ Failed to read emails from JSON:', error.message);
+    throw error;
+  }
+}
+
+/**
+ * Get signup statistics from JSON file
+ */
+function getStatsFromJson(): { total: number; subscribed: number; unsubscribed: number } {
+  try {
+    const jsonPath = join(process.cwd(), 'data', 'signups-list.json');
+    const signups = JSON.parse(readFileSync(jsonPath, 'utf-8'));
+    const total = signups.length;
+    const subscribed = signups.filter((s: any) => s.subscribed === 1).length;
+    return {
+      total,
+      subscribed,
+      unsubscribed: total - subscribed
+    };
+  } catch (error: any) {
+    console.error('⚠️  Failed to read stats from JSON:', error.message);
+    return { total: 0, subscribed: 0, unsubscribed: 0 };
+  }
+}
+
+/**
  * Fetch emails from Railway database
  */
 function getEmailsFromRailway(): string[] {
@@ -221,7 +262,7 @@ function getStatsFromRailway(): { total: number; subscribed: number; unsubscribe
 /**
  * Send notification emails to all subscribed users
  */
-async function sendNotifications(day: number = 1, useRailway: boolean = false) {
+async function sendNotifications(day: number = 1, useRailway: boolean = false, useJson: boolean = false) {
   const sendgridApiKey = process.env.SENDGRID_API_KEY;
   const fromEmail = process.env.FROM_EMAIL || 'noreply@adventofai.dev';
 
@@ -239,6 +280,9 @@ async function sendNotifications(day: number = 1, useRailway: boolean = false) {
   if (useRailway) {
     emails = getEmailsFromRailway();
     stats = getStatsFromRailway();
+  } else if (useJson) {
+    emails = getEmailsFromJson();
+    stats = getStatsFromJson();
   } else {
     console.log('📋 Fetching subscribed emails from local database...');
     emails = getSubscribedEmails();
@@ -296,15 +340,18 @@ const args = process.argv.slice(2);
 const dayArg = args.find(arg => arg.startsWith('--day='));
 const day = dayArg ? parseInt(dayArg.split('=')[1]) : 1;
 const useRailway = args.includes('--railway');
+const useJson = args.includes('--json');
 
 // Run the script
 console.log(`\n🎄 Advent of AI - Notification Sender`);
 console.log(`📅 Sending Day ${day} notifications...\n`);
 if (useRailway) {
   console.log('🚂 Using Railway database\n');
+} else if (useJson) {
+  console.log('📄 Using JSON file\n');
 }
 
-sendNotifications(day, useRailway)
+sendNotifications(day, useRailway, useJson)
   .then(() => {
     console.log('\n✅ Done!');
     process.exit(0);
