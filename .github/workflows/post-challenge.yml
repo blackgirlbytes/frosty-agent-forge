@@ -72,6 +72,7 @@ jobs:
       - name: Post to GitHub Discussions
         env:
           GITHUB_TOKEN: ${{ secrets.DISCUSSIONS_TOKEN }}
+          DISCUSSION_CATEGORY_ID: ${{ secrets.DISCUSSION_CATEGORY_ID }}
           GITHUB_REPOSITORY: block/goose
           CHALLENGE_DAY: ${{ steps.determine-day.outputs.day }}
         run: |
