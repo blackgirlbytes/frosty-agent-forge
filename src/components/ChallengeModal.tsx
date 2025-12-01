@@ -185,7 +185,7 @@ export const ChallengeModal = ({ day, isOpen, onClose }: ChallengeModalProps) =>
               {challenge.comments && challenge.comments.length > 0 && (
                 <div className="mt-8 border-t border-primary/20 pt-8">
                   <h3 className="text-xl font-bold text-primary mb-6">
-                    Solutions ({challenge.comments.length})
+                    Comments ({challenge.comments.length})
                   </h3>
                   <div className="space-y-6">
                     {challenge.comments.map((comment) => (
