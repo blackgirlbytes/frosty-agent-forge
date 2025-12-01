@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { marked } from 'marked';
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || process.env.DISCUSSIONS_TOKEN;
 const GITHUB_REPOSITORY = 'block/goose';
@@ -121,7 +120,6 @@ export async function GET(
     
     try {
       const challengeContent = readFileSync(challengePath, 'utf-8');
-      const html = await marked(challengeContent);
       
       // Try to read discussion metadata for URL and comment count
       const metadataPath = join(process.cwd(), 'data', `day${day}-discussion.json`);
@@ -166,7 +164,7 @@ export async function GET(
       return NextResponse.json({
         title: `Day ${day} Challenge`,
         url: discussionUrl,
-        body: html,
+        body: challengeContent, // Return raw markdown for react-markdown
         commentCount,
         comments,
         author: {
