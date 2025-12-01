@@ -81,10 +81,11 @@ async function getDiscussionById(discussionId: string) {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { day: string } }
+  { params }: { params: Promise<{ day: string }> }
 ) {
   try {
-    const day = parseInt(params.day, 10);
+    const { day: dayParam } = await params;
+    const day = parseInt(dayParam, 10);
 
     if (isNaN(day) || day < 1 || day > 17) {
       return NextResponse.json(
