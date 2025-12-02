@@ -45,7 +45,7 @@ export const CHALLENGE_TITLES: Record<number, string> = {
 
 /**
  * Check if a challenge is unlocked based on current date/time
- * Challenges unlock at 12:00 PM ET (noon Eastern Time)
+ * Challenges unlock at 11:45 AM ET
  */
 export function isChallengeUnlocked(challengeDay: number): boolean {
   const now = new Date();
@@ -54,8 +54,8 @@ export function isChallengeUnlocked(challengeDay: number): boolean {
   const decemberDate = CHALLENGE_DATES[challengeDay];
   if (!decemberDate) return false;
   
-  // All challenges unlock at noon ET
-  const unlockDate = new Date('2025-12-' + String(decemberDate).padStart(2, '0') + 'T12:00:00-05:00');
+  // All challenges unlock at 11:45 AM ET (changed from noon to unlock Day 2 immediately)
+  const unlockDate = new Date('2025-12-' + String(decemberDate).padStart(2, '0') + 'T11:45:00-05:00');
   
   return now >= unlockDate;
 }
