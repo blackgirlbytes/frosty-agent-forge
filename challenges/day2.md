@@ -2,7 +2,7 @@
 
 ## **Welcome Back, AI Engineer**
 
-The Winter Festival's Storyteller has laryngitis\! 
+The Winter Festival's Storyteller has laryngitis! 
 
 The Festival organizers are in a panic. They need an interactive experience where visitors can create personalized choose-your-own-adventure stories.
 

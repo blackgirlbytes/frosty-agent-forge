@@ -38,7 +38,6 @@ jobs:
   post-challenge:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
       discussions: write
       issues: write
     
@@ -81,14 +80,6 @@ jobs:
           CHALLENGE_DAY: ${{ steps.determine-day.outputs.day }}
         run: |
           npx tsx scripts/github/post-discussion.ts
-      
-      - name: Commit discussion metadata
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add data/day${{ steps.determine-day.outputs.day }}-discussion.json
-          git commit -m "feat: Add Day ${{ steps.determine-day.outputs.day }} discussion metadata [skip ci]" || echo "No changes to commit"
-          git push
       
       - name: Notify on failure
         if: failure()

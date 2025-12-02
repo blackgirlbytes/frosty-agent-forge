@@ -24,54 +24,80 @@ interface EmailTemplate {
 }
 
 /**
+ * Clean markdown text to plain text
+ */
+function cleanMarkdown(text: string): string {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, '$1')  // Remove bold
+    .replace(/\*(.+?)\*/g, '$1')      // Remove italic
+    .replace(/\\!/g, '!')             // Remove escaped characters
+    .replace(/\\/g, '')               // Remove remaining backslashes
+    .replace(/\[(.+?)\]\(.+?\)/g, '$1') // Remove links but keep text
+    .trim();
+}
+
+/**
  * Extract challenge preview from markdown file
  */
-function getChallengePreview(day: number): { title: string; preview: string } {
+function getChallengePreview(day: number): { title: string; greeting: string; description: string } {
   const challengePath = join(process.cwd(), 'challenges', `day${day}.md`);
   
   if (!existsSync(challengePath)) {
     console.warn(`⚠️  Challenge file not found for day ${day}, using fallback`);
     return {
       title: `Day ${day} Challenge`,
-      preview: `Your Day ${day} challenge is now available! Head to the site to see what's in store.`
+      greeting: 'Welcome, AI Engineer',
+      description: `Your Day ${day} challenge is now available! Head to the site to see what's in store.`
     };
   }
 
   try {
     const content = readFileSync(challengePath, 'utf-8');
     
-    // Extract title (first # heading)
+    // Extract title (first # heading) - clean it
     const titleMatch = content.match(/^#\s+(.+)$/m);
-    const title = titleMatch ? titleMatch[1] : `Day ${day} Challenge`;
+    const title = titleMatch ? cleanMarkdown(titleMatch[1]) : `Day ${day} Challenge`;
     
-    // Extract the intro paragraphs (after "## Welcome" section, before "###")
-    const welcomeSection = content.match(/##\s+Welcome[^#]*?([\s\S]*?)(?=###|##\s+\*\*|$)/);
-    let preview = '';
+    // Extract greeting (## Welcome... heading) - handle both with and without **
+    const greetingMatch = content.match(/##\s+\*?\*?(.+?)\*?\*?$/m);
+    const greeting = greetingMatch ? cleanMarkdown(greetingMatch[1]) : 'Welcome, AI Engineer';
     
-    if (welcomeSection && welcomeSection[1]) {
-      // Get first 2-3 paragraphs, clean up markdown
-      const paragraphs = welcomeSection[1]
+    // Extract the story/description paragraphs (after greeting heading, before first ###)
+    // This regex finds content after "## Welcome" and before the next heading
+    const storyMatch = content.match(/##\s+\*?\*?Welcome[^\n]*\n+([\s\S]*?)(?=\n###)/);
+    let description = '';
+    
+    if (storyMatch && storyMatch[1]) {
+      // Get paragraphs, filter out empty lines and separators
+      const paragraphs = storyMatch[1]
         .trim()
         .split('\n\n')
-        .filter(p => p.trim() && !p.startsWith('---'))
-        .slice(0, 3)
-        .map(p => p.replace(/\*\*/g, '').replace(/\*/g, '').trim())
-        .join('\n\n');
+        .filter(p => {
+          const trimmed = p.trim();
+          return trimmed && 
+                 !trimmed.startsWith('---') && 
+                 !trimmed.startsWith('###') &&
+                 trimmed.length > 10; // Skip very short lines
+        })
+        .map(p => cleanMarkdown(p))
+        .filter(p => p.length > 0);
       
-      preview = paragraphs;
+      // Take up to 4 paragraphs for a good preview
+      description = paragraphs.slice(0, 4).join('\n\n');
     }
     
-    // Fallback if we couldn't extract a good preview
-    if (!preview || preview.length < 50) {
-      preview = `Your Day ${day} challenge is now available! Head to the site to see what's in store.`;
+    // Fallback if we couldn't extract a good description
+    if (!description || description.length < 50) {
+      description = `Your Day ${day} challenge is now available! Head to the site to see what's in store.`;
     }
     
-    return { title, preview };
+    return { title, greeting, description };
   } catch (error: any) {
     console.error(`❌ Error reading challenge file for day ${day}:`, error.message);
     return {
       title: `Day ${day} Challenge`,
-      preview: `Your Day ${day} challenge is now available! Head to the site to see what's in store.`
+      greeting: 'Welcome, AI Engineer',
+      description: `Your Day ${day} challenge is now available! Head to the site to see what's in store.`
     };
   }
 }
@@ -80,11 +106,17 @@ function getChallengePreview(day: number): { title: string; preview: string } {
  * Get email template for challenge unlock notification
  */
 function getChallengeUnlockTemplate(day: number): EmailTemplate {
-  const { title, preview } = getChallengePreview(day);
+  const { title, greeting, description } = getChallengePreview(day);
   
   const subject = day === 1 
     ? '🎄 Day 1 Challenge is Live - Advent of AI!' 
     : `🎄 Day ${day} Challenge Unlocked - Advent of AI!`;
+
+  // Convert description paragraphs to HTML paragraphs
+  const descriptionHtml = description
+    .split('\n\n')
+    .map(p => `<p style="margin: 12px 0; line-height: 1.6;">${p}</p>`)
+    .join('');
 
   const html = `
     <!DOCTYPE html>
@@ -143,22 +175,25 @@ function getChallengeUnlockTemplate(day: number): EmailTemplate {
           color: #06b6d4;
           font-size: 24px;
           font-weight: 600;
-          margin: 0 0 20px 0;
+          margin: 0 0 8px 0;
         }
-        .challenge-preview {
-          background: #f9fafb;
-          border-left: 4px solid #06b6d4;
-          padding: 20px;
-          margin: 24px 0;
-          border-radius: 8px;
+        .greeting {
+          color: #6b7280;
+          font-size: 16px;
+          margin: 0 0 24px 0;
+          font-style: italic;
+        }
+        .section-header {
+          color: #374151;
+          font-size: 18px;
+          font-weight: 600;
+          margin: 24px 0 12px 0;
+        }
+        .challenge-description {
+          color: #4b5563;
           font-size: 15px;
           line-height: 1.7;
-          color: #374151;
-          white-space: pre-line;
-        }
-        .highlight {
-          color: #06b6d4;
-          font-weight: 600;
+          margin: 16px 0;
         }
         .cta-button {
           display: inline-block;
@@ -194,8 +229,12 @@ function getChallengeUnlockTemplate(day: number): EmailTemplate {
         
         <div class="content">
           <h2 class="challenge-title">${title}</h2>
+          <p class="greeting">${greeting}</p>
           
-          <div class="challenge-preview">${preview}</div>
+          <h3 class="section-header">Today's Challenge:</h3>
+          <div class="challenge-description">
+            ${descriptionHtml}
+          </div>
 
           <div style="text-align: center; margin: 40px 0;">
             <a href="https://adventofai.dev/challenges/${day}" class="cta-button">
@@ -203,12 +242,19 @@ function getChallengeUnlockTemplate(day: number): EmailTemplate {
             </a>
           </div>
 
-          <p style="font-size: 16px; margin-top: 24px; color: #6b7280;">
-            ${day === 1 
-              ? 'Ready to start your AI agent journey? Click above to see the full challenge details, requirements, and resources!'
-              : 'Ready to continue your journey? Click above to see the full challenge details and get started!'
-            }
+          <p style="font-size: 15px; margin: 24px 0; color: #4b5563; line-height: 1.7;">
+            Remember: Each challenge is designed to build your skills with goose and agentic workflows. Take your time, experiment, and learn!
           </p>
+
+          <div style="background: #f0f9ff; border-left: 4px solid #06b6d4; padding: 20px; margin: 24px 0; border-radius: 8px;">
+            <strong style="color: #06b6d4; font-size: 16px;">💡 Tips for Success:</strong>
+            <ul style="margin: 12px 0; padding-left: 24px;">
+              <li style="margin: 8px 0; color: #4b5563;">Read the challenge carefully before starting</li>
+              <li style="margin: 8px 0; color: #4b5563;">Use the goose documentation when you get stuck</li>
+              <li style="margin: 8px 0; color: #4b5563;">Share your progress in the Discord community</li>
+              <li style="margin: 8px 0; color: #4b5563;">Have fun and experiment!</li>
+            </ul>
+          </div>
         </div>
         
         <div class="footer">
