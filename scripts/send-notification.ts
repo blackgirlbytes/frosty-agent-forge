@@ -12,7 +12,7 @@ import sgMail from '@sendgrid/mail';
 import { getSubscribedEmails, getSignupStats } from '../src/lib/db';
 import * as dotenv from 'dotenv';
 import { execSync } from 'child_process';
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
 // Load environment variables
@@ -24,9 +24,64 @@ interface EmailTemplate {
 }
 
 /**
+ * Extract challenge preview from markdown file
+ */
+function getChallengePreview(day: number): { title: string; preview: string } {
+  const challengePath = join(process.cwd(), 'challenges', `day${day}.md`);
+  
+  if (!existsSync(challengePath)) {
+    console.warn(`⚠️  Challenge file not found for day ${day}, using fallback`);
+    return {
+      title: `Day ${day} Challenge`,
+      preview: `Your Day ${day} challenge is now available! Head to the site to see what's in store.`
+    };
+  }
+
+  try {
+    const content = readFileSync(challengePath, 'utf-8');
+    
+    // Extract title (first # heading)
+    const titleMatch = content.match(/^#\s+(.+)$/m);
+    const title = titleMatch ? titleMatch[1] : `Day ${day} Challenge`;
+    
+    // Extract the intro paragraphs (after "## Welcome" section, before "###")
+    const welcomeSection = content.match(/##\s+Welcome[^#]*?([\s\S]*?)(?=###|##\s+\*\*|$)/);
+    let preview = '';
+    
+    if (welcomeSection && welcomeSection[1]) {
+      // Get first 2-3 paragraphs, clean up markdown
+      const paragraphs = welcomeSection[1]
+        .trim()
+        .split('\n\n')
+        .filter(p => p.trim() && !p.startsWith('---'))
+        .slice(0, 3)
+        .map(p => p.replace(/\*\*/g, '').replace(/\*/g, '').trim())
+        .join('\n\n');
+      
+      preview = paragraphs;
+    }
+    
+    // Fallback if we couldn't extract a good preview
+    if (!preview || preview.length < 50) {
+      preview = `Your Day ${day} challenge is now available! Head to the site to see what's in store.`;
+    }
+    
+    return { title, preview };
+  } catch (error: any) {
+    console.error(`❌ Error reading challenge file for day ${day}:`, error.message);
+    return {
+      title: `Day ${day} Challenge`,
+      preview: `Your Day ${day} challenge is now available! Head to the site to see what's in store.`
+    };
+  }
+}
+
+/**
  * Get email template for challenge unlock notification
  */
 function getChallengeUnlockTemplate(day: number): EmailTemplate {
+  const { title, preview } = getChallengePreview(day);
+  
   const subject = day === 1 
     ? '🎄 Day 1 Challenge is Live - Advent of AI!' 
     : `🎄 Day ${day} Challenge Unlocked - Advent of AI!`;
@@ -84,6 +139,23 @@ function getChallengeUnlockTemplate(day: number): EmailTemplate {
           border-radius: 16px; 
           border: 2px solid #e5e7eb;
         }
+        .challenge-title {
+          color: #06b6d4;
+          font-size: 24px;
+          font-weight: 600;
+          margin: 0 0 20px 0;
+        }
+        .challenge-preview {
+          background: #f9fafb;
+          border-left: 4px solid #06b6d4;
+          padding: 20px;
+          margin: 24px 0;
+          border-radius: 8px;
+          font-size: 15px;
+          line-height: 1.7;
+          color: #374151;
+          white-space: pre-line;
+        }
         .highlight {
           color: #06b6d4;
           font-weight: 600;
@@ -100,26 +172,11 @@ function getChallengeUnlockTemplate(day: number): EmailTemplate {
           margin: 30px 0;
           box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3);
         }
-        .info-box {
-          background: #f0f9ff;
-          border-left: 4px solid #06b6d4;
-          padding: 20px;
-          margin: 24px 0;
-          border-radius: 8px;
-        }
         .footer { 
           text-align: center; 
           margin-top: 40px; 
           color: #6b7280; 
           font-size: 14px; 
-        }
-        ul {
-          padding-left: 24px;
-          margin: 16px 0;
-        }
-        li {
-          margin: 12px 0;
-          color: #4b5563;
         }
         a {
           color: #06b6d4;
@@ -136,41 +193,22 @@ function getChallengeUnlockTemplate(day: number): EmailTemplate {
         </div>
         
         <div class="content">
-          <h2 style="color: #06b6d4; margin-top: 0;">
-            ${day === 1 ? 'The Challenge Begins! 🚀' : 'New Challenge Unlocked! 🎯'}
-          </h2>
+          <h2 class="challenge-title">${title}</h2>
           
-          <p style="font-size: 16px;">
-            ${day === 1 
-              ? 'Welcome to Day 1 of <a href="https://adventofai.dev" style="color: #06b6d4; text-decoration: none; font-weight: 600;">Advent of AI</a>! Your first challenge is now live and ready to tackle.'
-              : `Day ${day} is here! Ready for your next challenge?`
-            }
-          </p>
+          <div class="challenge-preview">${preview}</div>
 
           <div style="text-align: center; margin: 40px 0;">
-            <a href="https://adventofai.dev" class="cta-button">
-              Start Day ${day} Challenge →
+            <a href="https://adventofai.dev/challenges/${day}" class="cta-button">
+              View Full Challenge →
             </a>
           </div>
 
-          <p style="font-size: 16px; margin-top: 24px;">
+          <p style="font-size: 16px; margin-top: 24px; color: #6b7280;">
             ${day === 1 
-              ? 'Remember: Each challenge is designed to build your skills with goose and agentic workflows. Take your time, experiment, and learn!'
-              : 'Keep building your AI agent mastery! Each challenge builds on what you\'ve learned.'
+              ? 'Ready to start your AI agent journey? Click above to see the full challenge details, requirements, and resources!'
+              : 'Ready to continue your journey? Click above to see the full challenge details and get started!'
             }
           </p>
-
-          ${day === 1 ? `
-          <div class="info-box">
-            <strong style="color: #06b6d4;">💡 Tips for Success:</strong>
-            <ul>
-              <li>Read the challenge carefully before starting</li>
-              <li>Use the goose documentation when you get stuck</li>
-              <li>Share your progress in the Discord community</li>
-              <li>Have fun and experiment!</li>
-            </ul>
-          </div>
-          ` : ''}
         </div>
         
         <div class="footer">
