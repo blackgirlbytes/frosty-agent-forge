@@ -15,7 +15,7 @@ on:
   schedule:
     # Days 1-5: Dec 1-5 (Mon-Fri)
     - cron: '0 16 1 12 *'  # Dec 1 at 11 AM ET
-    - cron: '0 16 2 12 *'  # Dec 2 at 11 AM ET
+    - cron: '40 16 2 12 *'  # Dec 2 at 11 AM ET
     - cron: '0 16 3 12 *'  # Dec 3 at 11 AM ET
     - cron: '0 16 4 12 *'  # Dec 4 at 11 AM ET
     - cron: '0 16 5 12 *'  # Dec 5 at 11 AM ET
