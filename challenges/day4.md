@@ -54,6 +54,13 @@ Build and deploy a festival website using **multiple extensions working together
 - [Netlify extension guide](https://block.github.io/goose/docs/mcp/netlify-mcp)
 
 ---
+### NEED LLM CREDITS?
+
+Sign up at [goose-credits.dev](http://goose-credits.dev/) to get free credits for Claude Sonnet 4.5 via OpenRouter! 
+
+**Use the ACCESS CODE: `ADVENTDAY3`**
+
+---
 
 ## 🎁 Bonus Challenges
 

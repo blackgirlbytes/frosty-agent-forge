@@ -62,6 +62,7 @@ That's where you come in.
 2. Go to **Settings → Extensions**
 3. Find **"Auto Visualiser"** and toggle it ON
 
+
 ### Requirements
 
 Create **at least 3 visualizations** that tell the tournament story:
@@ -71,6 +72,14 @@ Create **at least 3 visualizations** that tell the tournament story:
 - **Vote distributions, trends, or other insights**
 
 Just paste Sarah's data into Goose and describe what you want. The auto-visualiser handles the rest—charts render right in your conversation.
+
+---
+
+### NEED LLM CREDITS?
+
+Sign up at [goose-credits.dev](http://goose-credits.dev/) to get free credits for Claude Sonnet 4.5 via OpenRouter! 
+
+**Use the ACCESS CODE: `ADVENTDAY3`**
 
 ---
 
