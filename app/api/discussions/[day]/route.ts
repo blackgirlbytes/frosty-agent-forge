@@ -4,33 +4,40 @@ import { join } from 'path';
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || process.env.DISCUSSIONS_TOKEN;
 const GITHUB_REPOSITORY = 'block/goose';
+const [REPO_OWNER, REPO_NAME] = GITHUB_REPOSITORY.split('/');
 
-interface GraphQLResponse {
-  data?: {
-    node?: {
+interface Discussion {
+  id: string;
+  title: string;
+  url: string;
+  body: string;
+  bodyHTML: string;
+  createdAt: string;
+  author: {
+    login: string;
+    avatarUrl: string;
+  };
+  comments: {
+    totalCount: number;
+    nodes: Array<{
       id: string;
-      title: string;
-      url: string;
-      body: string;
       bodyHTML: string;
       createdAt: string;
       author: {
         login: string;
         avatarUrl: string;
+        url: string;
       };
-      comments: {
-        totalCount: number;
-        nodes: Array<{
-          id: string;
-          bodyHTML: string;
-          createdAt: string;
-          author: {
-            login: string;
-            avatarUrl: string;
-            url: string;
-          };
-          url: string;
-        }>;
+      url: string;
+    }>;
+  };
+}
+
+interface SearchGraphQLResponse {
+  data?: {
+    repository?: {
+      discussions: {
+        nodes: Discussion[];
       };
     };
   };
@@ -40,7 +47,17 @@ interface GraphQLResponse {
   }>;
 }
 
-async function graphqlRequest(query: string, variables: Record<string, unknown>): Promise<GraphQLResponse> {
+interface NodeGraphQLResponse {
+  data?: {
+    node?: Discussion;
+  };
+  errors?: Array<{
+    message: string;
+    type: string;
+  }>;
+}
+
+async function graphqlRequest<T>(query: string, variables: Record<string, unknown>): Promise<T> {
   const response = await fetch('https://api.github.com/graphql', {
     method: 'POST',
     headers: {
@@ -48,6 +65,8 @@ async function graphqlRequest(query: string, variables: Record<string, unknown>)
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ query, variables }),
+    // Cache for 60 seconds to avoid hitting rate limits
+    next: { revalidate: 60 },
   });
 
   if (!response.ok) {
@@ -57,7 +76,73 @@ async function graphqlRequest(query: string, variables: Record<string, unknown>)
   return response.json();
 }
 
-async function getDiscussionById(discussionId: string) {
+// Search for a discussion by day number in the title
+async function findDiscussionByDay(day: number): Promise<Discussion | null> {
+  const query = `
+    query($owner: String!, $name: String!, $searchQuery: String!) {
+      repository(owner: $owner, name: $name) {
+        discussions(first: 10, categoryId: null, orderBy: {field: CREATED_AT, direction: DESC}) {
+          nodes {
+            id
+            title
+            url
+            body
+            bodyHTML
+            createdAt
+            author {
+              login
+              avatarUrl
+            }
+            comments(first: 10) {
+              totalCount
+              nodes {
+                id
+                bodyHTML
+                createdAt
+                author {
+                  login
+                  avatarUrl
+                  url
+                }
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  // Search patterns that match "Day X" in the title
+  const searchPatterns = [
+    `Day ${day}:`,
+    `Day ${day} `,
+  ];
+
+  const result = await graphqlRequest<SearchGraphQLResponse>(query, {
+    owner: REPO_OWNER,
+    name: REPO_NAME,
+    searchQuery: `Day ${day}`,
+  });
+
+  if (result.errors) {
+    console.error('GraphQL errors:', result.errors);
+    throw new Error(`GraphQL errors: ${JSON.stringify(result.errors)}`);
+  }
+
+  const discussions = result.data?.repository?.discussions.nodes || [];
+  
+  // Find the discussion that matches "Day X:" or "Day X " in the title
+  // This ensures we match "Day 3:" but not "Day 13:"
+  const discussion = discussions.find(d => 
+    searchPatterns.some(pattern => d.title.includes(pattern))
+  );
+
+  return discussion || null;
+}
+
+// Fallback: get discussion by ID (for backwards compatibility with metadata files)
+async function getDiscussionById(discussionId: string): Promise<Discussion | null> {
   const query = `
     query($id: ID!) {
       node(id: $id) {
@@ -72,7 +157,7 @@ async function getDiscussionById(discussionId: string) {
             login
             avatarUrl
           }
-          comments(first: 5) {
+          comments(first: 10) {
             totalCount
             nodes {
               id
@@ -91,13 +176,13 @@ async function getDiscussionById(discussionId: string) {
     }
   `;
 
-  const result = await graphqlRequest(query, { id: discussionId });
+  const result = await graphqlRequest<NodeGraphQLResponse>(query, { id: discussionId });
 
   if (result.errors) {
     throw new Error(`GraphQL errors: ${JSON.stringify(result.errors)}`);
   }
 
-  return result.data?.node;
+  return result.data?.node || null;
 }
 
 export async function GET(
@@ -118,66 +203,9 @@ export async function GET(
     // Read challenge content from markdown file
     const challengePath = join(process.cwd(), 'challenges', `day${day}.md`);
     
+    let challengeContent: string;
     try {
-      const challengeContent = readFileSync(challengePath, 'utf-8');
-      
-      // Try to read discussion metadata for URL and comment count
-      const metadataPath = join(process.cwd(), 'data', `day${day}-discussion.json`);
-      let discussionUrl = `https://github.com/${GITHUB_REPOSITORY}/discussions`;
-      let discussionId: string | null = null;
-      let commentCount = 0;
-      
-      try {
-        const metadata = JSON.parse(readFileSync(metadataPath, 'utf-8'));
-        discussionUrl = metadata.url;
-        discussionId = metadata.id;
-      } catch {
-        // Metadata doesn't exist yet - discussion not posted
-      }
-
-      // If we have a discussion ID, fetch comments from GitHub
-      let comments: Array<{
-        id: string;
-        bodyHTML: string;
-        createdAt: string;
-        author: {
-          login: string;
-          avatarUrl: string;
-          url: string;
-        };
-        url: string;
-      }> = [];
-
-      if (discussionId && GITHUB_TOKEN) {
-        try {
-          console.log('Fetching comments for discussion:', discussionId);
-          const discussion = await getDiscussionById(discussionId);
-          if (discussion) {
-            commentCount = discussion.comments.totalCount;
-            comments = discussion.comments.nodes;
-            console.log('Successfully fetched', commentCount, 'comments');
-          }
-        } catch (error) {
-          console.error('Failed to fetch comments:', error);
-          // Continue without comments
-        }
-      } else {
-        if (!discussionId) console.warn('No discussion ID found');
-        if (!GITHUB_TOKEN) console.warn('No GITHUB_TOKEN or DISCUSSIONS_TOKEN found');
-      }
-
-      return NextResponse.json({
-        title: `Day ${day} Challenge`,
-        url: discussionUrl,
-        body: challengeContent, // Return raw markdown for react-markdown
-        commentCount,
-        comments,
-        author: {
-          login: 'goose-oss',
-          avatarUrl: 'https://github.com/goose-oss.png',
-        },
-        createdAt: new Date().toISOString(),
-      });
+      challengeContent = readFileSync(challengePath, 'utf-8');
     } catch {
       return NextResponse.json(
         { 
@@ -187,6 +215,60 @@ export async function GET(
         { status: 404 }
       );
     }
+
+    // Default values
+    let discussionUrl = `https://github.com/${GITHUB_REPOSITORY}/discussions`;
+    let commentCount = 0;
+    let comments: Discussion['comments']['nodes'] = [];
+
+    if (GITHUB_TOKEN) {
+      try {
+        // First, try to find the discussion by searching for "Day X" in the title
+        console.log(`Searching for Day ${day} discussion...`);
+        let discussion = await findDiscussionByDay(day);
+
+        // Fallback: check for legacy metadata file
+        if (!discussion) {
+          const metadataPath = join(process.cwd(), 'data', `day${day}-discussion.json`);
+          try {
+            const metadata = JSON.parse(readFileSync(metadataPath, 'utf-8'));
+            if (metadata.id) {
+              console.log(`Using metadata file for Day ${day}, ID: ${metadata.id}`);
+              discussion = await getDiscussionById(metadata.id);
+            }
+          } catch {
+            // No metadata file, that's fine
+          }
+        }
+
+        if (discussion) {
+          console.log(`Found discussion: ${discussion.title}`);
+          discussionUrl = discussion.url;
+          commentCount = discussion.comments.totalCount;
+          comments = discussion.comments.nodes;
+        } else {
+          console.log(`No discussion found for Day ${day}`);
+        }
+      } catch (error) {
+        console.error('Failed to fetch discussion:', error);
+        // Continue without comments - we still have the challenge content
+      }
+    } else {
+      console.warn('No GITHUB_TOKEN or DISCUSSIONS_TOKEN found - cannot fetch comments');
+    }
+
+    return NextResponse.json({
+      title: `Day ${day} Challenge`,
+      url: discussionUrl,
+      body: challengeContent,
+      commentCount,
+      comments,
+      author: {
+        login: 'goose-oss',
+        avatarUrl: 'https://github.com/goose-oss.png',
+      },
+      createdAt: new Date().toISOString(),
+    });
 
   } catch (error) {
     console.error('Error loading challenge:', error);
