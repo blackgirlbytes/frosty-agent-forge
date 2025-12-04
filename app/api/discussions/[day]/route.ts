@@ -76,12 +76,64 @@ async function graphqlRequest<T>(query: string, variables: Record<string, unknow
   return response.json();
 }
 
-// Search for a discussion by day number in the title
+// Search for a discussion by day number in the title using GitHub's search API
 async function findDiscussionByDay(day: number): Promise<Discussion | null> {
-  const query = `
-    query($owner: String!, $name: String!, $searchQuery: String!) {
+  // First, we need to get the category ID for "Advent of AI"
+  const categoryQuery = `
+    query($owner: String!, $name: String!) {
       repository(owner: $owner, name: $name) {
-        discussions(first: 10, categoryId: null, orderBy: {field: CREATED_AT, direction: DESC}) {
+        discussionCategories(first: 20) {
+          nodes {
+            id
+            name
+            slug
+          }
+        }
+      }
+    }
+  `;
+
+  interface CategoryResponse {
+    data?: {
+      repository?: {
+        discussionCategories: {
+          nodes: Array<{
+            id: string;
+            name: string;
+            slug: string;
+          }>;
+        };
+      };
+    };
+    errors?: Array<{ message: string }>;
+  }
+
+  const categoryResult = await graphqlRequest<CategoryResponse>(categoryQuery, {
+    owner: REPO_OWNER,
+    name: REPO_NAME,
+  });
+
+  if (categoryResult.errors) {
+    console.error('Failed to fetch categories:', categoryResult.errors);
+    throw new Error(`GraphQL errors: ${JSON.stringify(categoryResult.errors)}`);
+  }
+
+  const adventCategory = categoryResult.data?.repository?.discussionCategories.nodes.find(
+    c => c.slug === 'advent-of-ai' || c.name.toLowerCase().includes('advent')
+  );
+
+  if (!adventCategory) {
+    console.error('Could not find Advent of AI category');
+    return null;
+  }
+
+  console.log(`Found Advent of AI category: ${adventCategory.id}`);
+
+  // Now fetch discussions from that category
+  const query = `
+    query($owner: String!, $name: String!, $categoryId: ID!) {
+      repository(owner: $owner, name: $name) {
+        discussions(first: 20, categoryId: $categoryId, orderBy: {field: CREATED_AT, direction: DESC}) {
           nodes {
             id
             title
@@ -113,16 +165,10 @@ async function findDiscussionByDay(day: number): Promise<Discussion | null> {
     }
   `;
 
-  // Search patterns that match "Day X" in the title
-  const searchPatterns = [
-    `Day ${day}:`,
-    `Day ${day} `,
-  ];
-
   const result = await graphqlRequest<SearchGraphQLResponse>(query, {
     owner: REPO_OWNER,
     name: REPO_NAME,
-    searchQuery: `Day ${day}`,
+    categoryId: adventCategory.id,
   });
 
   if (result.errors) {
@@ -132,11 +178,23 @@ async function findDiscussionByDay(day: number): Promise<Discussion | null> {
 
   const discussions = result.data?.repository?.discussions.nodes || [];
   
-  // Find the discussion that matches "Day X:" or "Day X " in the title
+  console.log(`Found ${discussions.length} discussions in Advent of AI category`);
+  discussions.forEach(d => console.log(`  - ${d.title}`));
+
+  // Search patterns that match "Day X:" or "Day X " in the title
   // This ensures we match "Day 3:" but not "Day 13:"
+  const searchPatterns = [
+    `Day ${day}:`,
+    `Day ${day} `,
+  ];
+
   const discussion = discussions.find(d => 
     searchPatterns.some(pattern => d.title.includes(pattern))
   );
+
+  if (discussion) {
+    console.log(`Matched discussion: ${discussion.title}`);
+  }
 
   return discussion || null;
 }
