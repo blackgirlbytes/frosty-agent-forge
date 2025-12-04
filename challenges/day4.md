@@ -58,7 +58,7 @@ Build and deploy a festival website using **multiple extensions working together
 
 Sign up at [goose-credits.dev](http://goose-credits.dev/) to get free credits for Claude Sonnet 4.5 via OpenRouter! 
 
-**Use the ACCESS CODE: `ADVENTDAY3`**
+**Use the ACCESS CODE: `ADVENTDAY4`**
 
 ---
 
@@ -74,16 +74,20 @@ Sign up at [goose-credits.dev](http://goose-credits.dev/) to get free credits fo
 
 ## **📤 Share Your Work**
 
-**📮 Required:** Submit your work to complete Day 4\!
+**📮 Required:** Submit your work to complete Day 4!
 
 Post your solution in the [Advent of AI Discussion](https://github.com/block/goose/discussions/categories/advent-of-ai) under **Day 4**.  
 **Accepted formats:**
 
-- Screen shot showing different fortune personalities  
+- Screen shot of your site
 - Link to your live site  
 - Link to a blog post about your solution  
 - Link to a video of you solving the problem  
 - Link to your repo
+
+**Tag us on socials:**  
+[Discord](https://discord.gg/goose-oss) • [Twitter/X](https://x.com/goose_oss) • [YouTube](https://www.youtube.com/@goose-oss) • [LinkedIn](https://www.linkedin.com/company/goose-oss) • [Bluesky](https://bsky.app/profile/opensource.block.xyz)
+
 
 ---
 
