@@ -178,6 +178,82 @@ async function createDiscussion(
   return discussion;
 }
 
+interface PinnedDiscussion {
+  id: string;
+  discussion: {
+    id: string;
+    title: string;
+    category: {
+      name: string;
+    };
+  };
+}
+
+async function getPinnedDiscussions(): Promise<PinnedDiscussion[]> {
+  const query = `
+    query($owner: String!, $repo: String!) {
+      repository(owner: $owner, name: $repo) {
+        pinnedDiscussions(first: 10) {
+          nodes {
+            id
+            discussion {
+              id
+              title
+              category {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const result = await graphqlRequest(query, { owner: OWNER, repo: REPO });
+
+  if (result.errors) {
+    throw new Error(`GraphQL errors: ${JSON.stringify(result.errors)}`);
+  }
+
+  return (result.data as any)?.repository?.pinnedDiscussions?.nodes || [];
+}
+
+async function unpinDiscussion(pinnedDiscussionId: string): Promise<void> {
+  const mutation = `
+    mutation($pinnedDiscussionId: ID!) {
+      unpinDiscussion(input: { pinnedDiscussionId: $pinnedDiscussionId }) {
+        pinnedDiscussion {
+          id
+        }
+      }
+    }
+  `;
+
+  const result = await graphqlRequest(mutation, { pinnedDiscussionId });
+
+  if (result.errors) {
+    throw new Error(`GraphQL errors: ${JSON.stringify(result.errors)}`);
+  }
+}
+
+async function pinDiscussion(discussionId: string): Promise<void> {
+  const mutation = `
+    mutation($discussionId: ID!) {
+      pinDiscussion(input: { discussionId: $discussionId }) {
+        discussion {
+          id
+        }
+      }
+    }
+  `;
+
+  const result = await graphqlRequest(mutation, { discussionId });
+
+  if (result.errors) {
+    throw new Error(`GraphQL errors: ${JSON.stringify(result.errors)}`);
+  }
+}
+
 async function main() {
   console.log('🎄 Advent of AI - Challenge Posting Script');
   console.log('==========================================\n');
@@ -242,6 +318,28 @@ async function main() {
   console.log(`   Title: ${discussion.title}`);
   console.log(`   URL: ${discussion.url}`);
   console.log(`   ID: ${discussion.id}`);
+
+  // Try to manage pinning, but don't fail if it doesn't work
+  try {
+    console.log('\n📌 Managing pinned discussions...');
+    
+    // Unpin any existing Advent of AI discussions
+    const pinnedDiscussions = await getPinnedDiscussions();
+    for (const pinned of pinnedDiscussions) {
+      if (pinned.discussion.category.name === "Advent of AI") {
+        await unpinDiscussion(pinned.id);
+        console.log(`   Unpinned: ${pinned.discussion.title}`);
+      }
+    }
+    
+    // Pin the new discussion
+    await pinDiscussion(discussion.id);
+    console.log(`   ✅ Pinned: ${discussion.title}`);
+    
+  } catch (pinError) {
+    // Log the error but don't fail the workflow
+    console.warn(`⚠️  Pinning failed (discussion was still posted): ${(pinError as Error).message}`);
+  }
 
   // Save discussion metadata
   const metadata = {
