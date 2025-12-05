@@ -58,8 +58,8 @@ export default async function ChallengePageRoute({ params, searchParams }: PageP
     notFound();
   }
 
-  // Check if challenge is unlocked (bypass if preview=internal2024)
-  const isPreview = preview === 'internal2024';
+  // Check if challenge is unlocked (bypass if preview=internal2025)
+  const isPreview = preview === 'internal2025';
   const unlocked = isChallengeUnlocked(day);
 
   // If locked and not preview mode, redirect to home with a message
