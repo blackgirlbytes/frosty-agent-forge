@@ -63,6 +63,26 @@ Sign up at [goose-credits.dev](http://goose-credits.dev/) to get free credits fo
 
 ---
 
+## **💡 Tips From the Trenches**
+
+We learned some things building this challenge - here's what'll save you headaches:
+
+**Gesture Selection Matters:**
+* **Start simple!** Pick 2 gestures that are very different from each other
+* ✅ Great combo: **Closed fist** + **Open palm** (totally distinct hand shapes)
+* ⚠️ Tricky combos: Pointing finger can be misread as a fist, peace sign vs pointing, etc.
+* Similar gestures = confused detection = frustration
+
+**Hand Tracking Gotchas:**
+* If your skeleton overlay appears on the opposite side of your hand, you need to mirror both the video AND the landmarks together
+* Lower the debounce time (200-400ms) for snappier response
+* MediaPipe's detection confidence can be tuned - start with 0.7
+
+**Flight API Tips:**
+* OpenSky's `/states/all` endpoint (live aircraft positions) is more reliable than `/flights/arrival`
+* You'll likely need a CORS proxy for browser requests (try `corsproxy.io`)
+* The free tier has rate limits - cache your data!
+
 ## **🎁 Bonus Challenges (Pick Your Level\!)**
 
 **🌟 Beginner Bonus:**
