@@ -8,7 +8,7 @@ interface PageProps {
     day: string;
   }>;
   searchParams: Promise<{
-    admin?: string;
+    preview?: string;
   }>;
 }
 
@@ -50,7 +50,7 @@ export async function generateStaticParams() {
 
 export default async function ChallengePageRoute({ params, searchParams }: PageProps) {
   const { day: dayParam } = await params;
-  const { admin } = await searchParams;
+  const { preview } = await searchParams;
   const day = parseInt(dayParam, 10);
 
   // Validate day parameter
@@ -58,12 +58,12 @@ export default async function ChallengePageRoute({ params, searchParams }: PageP
     notFound();
   }
 
-  // Check if challenge is unlocked (bypass if admin=true)
-  const isAdmin = admin === 'true';
+  // Check if challenge is unlocked (bypass if preview=internal2024)
+  const isPreview = preview === 'internal2024';
   const unlocked = isChallengeUnlocked(day);
 
-  // If locked and not admin, redirect to home with a message
-  if (!unlocked && !isAdmin) {
+  // If locked and not preview mode, redirect to home with a message
+  if (!unlocked && !isPreview) {
     redirect('/?locked=' + day);
   }
 

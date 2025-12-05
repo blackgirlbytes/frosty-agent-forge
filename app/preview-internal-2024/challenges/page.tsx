@@ -36,7 +36,7 @@ export default function AdminChallengesPage() {
             {challenges.map((day) => (
               <Link
                 key={day}
-                href={`/challenges/${day}?admin=true`}
+                href={`/challenges/${day}?preview=internal2024`}
                 className="frosted-glass rounded-xl p-6 hover:bg-white/10 transition-all hover:scale-105 border border-white/10"
               >
                 <div className="flex items-center gap-3 mb-3">
