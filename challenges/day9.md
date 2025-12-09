@@ -1,158 +1,264 @@
+# Day 9: The Gift Tag Dilemma 🎁✨
+## Welcome Back, AI Engineer
 
-# **Day 9: The Gift Tag Generator 🎁✨**
+The Winter Festival gift exchange is tomorrow, and the organizers have a *major* problem:  
+they’ve wrapped **50+ gifts** for volunteers, performers, and special guests…  
+but **not a single gift tag exists**.
 
-## **Welcome Back, AI Engineer**
+Maya, the festival coordinator, is spiraling. Each gift needs a personalized tag with:
 
-The Winter Festival gift exchange is tomorrow, and there's a problem.
+- The recipient’s name  
+- What the gift is  
+- Who it’s from  
+- A style that matches the festival aesthetic  
 
-Maya, the festival coordinator, just realized they have **50+ gifts** ready to distribute to volunteers, performers, and special guests... but **no gift tags**!
+She *could* write them all by hand, but that would take hours.  
+The print shop *could* help — but only if everything follows one consistent format.
 
-*"We need personalized tags for EVERY gift! Each one needs the recipient's name, what's inside, who it's from, and it needs to match our festival aesthetic. I could write them all by hand but that would take HOURS!"*
+That’s where you come in.
 
-She turns to you hopefully:
+But just as you’re gearing up to help, Maya gets a call from the print shop:
 
-*"You've been doing all that amazing goose stuff... can you help? We need something we can run over and over with different details."*
+> “Maya, we can do WAY more than basic tags.  
+> QR codes. Specialty papers. Embossing. Multilingual greetings.  
+> If you can give us structured data, we can make these tags *spectacular*.”
 
-That's when it hits you: **This is the perfect use case for a parameterized recipe!**
+She turns to you — hopeful, desperate:
+
+**“These tags can’t just be labels.  
+They need to be an *experience*. Can you build a system that handles all of this?”**
+
+Your Day 9 challenge begins.
 
 ---
 
-## **Your Mission: Build a Reusable Gift Tag Generator**
+## 🎯 Your Mission
 
-Create a goose recipe that accepts parameters and generates beautifully formatted gift tags on demand.
+Create a **`gift-tag-generator.yaml`** recipe that generates *beautiful, fully formatted, print-ready gift tags* using Goose.
 
-**What Makes This Different:**
-* **Previous Days:** Your recipes were specific to one task
-* **Today:** You're creating a **parameterized recipe** - same recipe, different inputs each time
+These tags should adapt to different aesthetics, recipient preferences, languages, poems, layouts, and QR codes — all from parameters.
+
+This is your first true **design-system recipe**.
 
 ---
 
-## **🎯 What You'll Build**
+## 🧩 Required Parameters  
+Your recipe **must** support every one of these parameters:
 
-A recipe called `gift-tag-generator.yaml` that accepts these parameters:
+- `recipient_name`  
+- `gift_description`  
+- `sender_name`  
+- `tag_style` — one of: `elegant`, `playful`, `minimalist`, `festive`  
+- `include_poem` — boolean
+- `qr_message_url` — embed a working QR code if provided  
+- `gift_size` — `small`, `medium`, or `large` (affects layout)  
+- `recipient_preferences` (object):
+  - `favorite_color`
+  - `language` (supports multilingual greetings)
+  - `tone` (formal, casual, humorous, heartfelt)
 
-**Required:**
-* **recipient_name** - Who's receiving the gift
-* **gift_description** - What's inside
-* **sender_name** - Who it's from
-* **tag_style** - The aesthetic (elegant, playful, minimalist, or festive)
+---
 
-**Optional:**
-* **include_poem** - Whether to add a short festive poem (true/false)
+## 🧠 What Your Recipe Should Do
 
-**Example:**
-```bash
-goose run gift-tag-generator.yaml \
-  --recipient_name "Sofia the Storyteller" \
-  --gift_description "Hand-knitted winter scarf" \
-  --sender_name "The Festival Team" \
-  --tag_style "elegant" \
-  --include_poem true
+Your recipe should apply **smart logic + design rules** to produce a final output that changes dramatically depending on the inputs.
+
+### Your recipe must:
+
+#### **1. Generate dynamic, style-driven layouts**
+`tag_style` should influence:
+- typography  
+- spacing  
+- color palette  
+- decorative elements  
+- emoji (if appropriate)  
+- composition  
+
+#### **2. Handle multilingual content**
+Greeting + optional poem should appear in:
+- English  
+- Spanish  
+- French  
+- (and more if you want!)
+
+#### **3. Support QR code embedding**
+If `qr_message_url` is present:
+- Generate a QR code  
+- Embed it **inside** the final HTML tag  
+
+#### **4. Adapt based on gift size**
+- `small` → compact, minimal layout  
+- `medium` → balanced layout  
+- `large` → more room for design elements  
+
+#### **5. Generate a thoughtful, context-aware poem**
+When `include_poem: true`, poem must:
+- match the selected **tone**  
+- reference the **gift**  
+- fit the **style**  
+
+#### **6. Output **print-ready HTML**
+This means:
+- Valid HTML structure  
+- Inline CSS  
+- Dimensions appropriate for printing  
+- Single-tag layout ready to save or export  
+-Output a clean, print-ready HTML file containing only the tag itself, no preview wrappers or UI scaffolding. 
+
+---
+
+## 📦 Example Scenarios to Test
+
+### **Scenario 1: Volunteer**
+```yaml
+recipient_name: "Sarah Chen"
+gift_description: "Handmade scarf"
+sender_name: "Festival Committee"
+tag_style: "festive"
+include_poem: true
+qr_message_url: null
+recipient_preferences:
+  favorite_color: "red"
+  language: "English"
+  tone: "heartfelt"
+gift_size: "medium"
+
+---
+
+## Example Scenarios to Test
+
+### Scenario 1: The Volunteer (Simple)
+```yaml
+recipient_name: "Sarah Chen"
+gift_description: "Handmade scarf"
+sender_name: "Festival Committee"
+tag_style: "festive"
+include_poem: true
+```
+### Scenario 2: The Performer (Advanced)
+```yaml
+recipient_name: "Marcus Rodriguez"
+gift_description: "Professional microphone"
+sender_name: "Winter Festival Team"
+tag_style: "elegant"
+include_poem: true
+qr_message_url: "https://example.com/thank-you-marcus"
+recipient_preferences:
+  favorite_color: "navy blue"
+  language: "Spanish"
+  tone: "formal"
+gift_size: "medium"
 ```
 
+### Scenario 3: The Special Guest (Full Features)
+```yaml
+recipient_name: "Emma Thompson"
+gift_description: "Artisan chocolate collection"
+sender_name: "Mayor's Office"
+tag_style: "minimalist"
+include_poem: true
+qr_message_url: "https://example.com/special-message"
+recipient_preferences:
+  favorite_color: "gold"
+  language: "French"
+  tone: "heartfelt"
+gift_size: "small"
+```
 ---
 
-## **🎨 What Maya Needs**
+## 🎁 Bonus Challenges
 
-Each gift tag should look something like this:
+### Beginner 🌟
+- Add seasonal emoji that match each tag style  
+- Include a version number or metadata footer  
+- Try faux-foil or drop-shadow effects using CSS  
 
-```
-╔════════════════════════════════════════════════╗
-║              🎁 GIFT TAG 🎁                    ║
-║                                                ║
-║  TO: Sofia the Storyteller                     ║
-║  GIFT: Hand-knitted winter scarf               ║
-║  FROM: The Festival Team                       ║
-║                                                ║
-║  "Wrapped with warmth and winter cheer,       ║
-║   A gift to brighten your new year!"          ║
-╚════════════════════════════════════════════════╝
-```
+### Intermediate 🌟🌟
+- Create print-ready PDFs  
+- Implement a “batch mode” that processes multiple tags from a CSV file  
+- Add custom font selections per style  
+- Build a small gallery page that previews all styles  
 
-**The tag style should change based on the `tag_style` parameter:**
-* **elegant** - Classic borders, sophisticated language
-* **playful** - Fun emojis, casual tone
-* **minimalist** - Clean lines, simple design
-* **festive** - Lots of winter/holiday decorations
+### Advanced 🌟🌟🌟
+- Generate real, scannable QR codes (not just placeholders)  
+- Create a web interface for tag preview  
+- Support custom logo or image uploads  
+- Implement advanced layout algorithms (text wrapping, spacing, constraints)  
+- Add a “theme builder” that lets users define their own styles  
+- Export tags in multiple formats (PDF, PNG, etc.)  
+
+### Ultimate Challenge 🌟🌟🌟🌟
+Build a full **Gift Tag Management System** that can:
+
+- Import recipient lists from CSV/Excel  
+- Bulk-generate hundreds of tags  
+- Track which tags have been printed  
+- Support multiple events/festivals  
+- Create a print queue system  
+- Generate shipping labels alongside gift tags  
+- Provide a mobile scanning app for QR codes  
+- Offer analytics: Most popular gifts, scan counts, etc.
 
 ---
 
-## **🛠️ How to Build Your Recipe**
+## 🛠️ How to Build Your Recipe
 
 ### **NEED LLM CREDITS?**
+If you need compute to run your recipe:  
+Sign up at **[goose-credits.dev](https://goose-credits.dev/)** to get **free credits** for Claude Sonnet 4.5 via OpenRouter!
 
-Sign up at [goose-credits.dev](http://goose-credits.dev/) to get free credits for Claude Sonnet 4.5 via OpenRouter! 
-
-**Use the ACCESS CODE: `ADVENTDAY9`**
-
-### **Key Resources:**
-* [Recipe Reference - Parameters](https://block.github.io/goose/docs/guides/recipes/recipe-reference#parameters)
-* [Advanced Recipe Tips (Video)](https://block.github.io/goose/docs/guides/recipes/)
-
-### **Recipe Structure:**
-```yaml
-name: Gift Tag Generator
-description: Generate personalized gift tags
-
-parameters:
-  recipient_name:
-    type: string
-    description: Who's receiving the gift
-    required: true
-  # ... define other parameters
-  
-instructions: |
-  You are a gift tag designer...
-```
+**Use the ACCESS CODE:** `ADVENTDAY9`
 
 ---
 
-## **📋 Requirements**
+### **Key Resources**
+- 📘 **Recipe Reference – Parameters**  
+  https://block.github.io/goose/docs/guides/recipes/recipe-reference#parameters
 
-**Your Recipe Must:**
-✅ Be saved as `gift-tag-generator.yaml`  
-✅ Accept all 5 parameters (4 required, 1 optional)  
-✅ Generate beautifully formatted gift tags  
-✅ Adapt design based on `tag_style` parameter  
-✅ Be reusable with different inputs
-
-**Your Testing:**
-✅ Generate at least 3 different gift tags  
-✅ Test at least 2 different styles  
-✅ Try with and without poems
+- 🎥 **Advanced Recipe Tips (Video)**  
+  https://block.github.io/goose/docs/guides/recipes/
 
 ---
 
-## **🎁 Bonus Challenges**
+---
+## 📤 Share Your Work
 
-* **Add a `color_scheme` parameter** (winter blues, warm reds, elegant gold)
-* **Support multiple output formats** (markdown, HTML, plain text)
-* **Generate multiple tags at once** from a CSV file
-* **Export to PDF** ready for printing
+📮 **Required:**  
+Submit your work in the **Advent of AI Discussion** under **Day 9**.
+
+### Accepted Formats
+
+**Required:**
+- Your recipe file (so others can use it!)
+- Screenshots of **at least 3 different tag styles**
+- An example showing **QR code integration**
+
+**Optional but awesome:**
+- A side-by-side comparison of all 4 tag styles
+- A batch of tags ready for printing
+- A video showing your recipe in action
+- Multi-language examples
+- Your most creative custom poem
+- A print “tag sheet” (multiple tags on a page)
+- Any bonus features you added
+
+### Share on Socials  
+If you want to show off:  
+- **Discord** — #adventofai  
+- **Twitter/X**  
+- **YouTube**  
+- **LinkedIn**  
+- **Bluesky**
 
 ---
 
-## **📤 Share Your Work**
-
-**📮 Required:** Submit in the [Advent of AI Discussion](https://github.com/block/goose/discussions/categories/advent-of-ai) under **Day 9**.
-
-**Share:**
-* Your `gift-tag-generator.yaml` file
-* Screenshots of 3+ different gift tags
-* The parameter combinations you tested
-
-**Tag us:** [Discord](https://discord.gg/goose-oss) • [Twitter/X](https://x.com/goose_oss) • [YouTube](https://www.youtube.com/@goose-oss) • [LinkedIn](https://www.linkedin.com/company/goose-oss) • [Bluesky](https://bsky.app/profile/opensource.block.xyz)
-
----
-
-## **✅ Success Criteria**
+## 🛠️ Success Criteria
 
 You've completed Day 9 when:
 
-✅ You've created a working `gift-tag-generator.yaml` recipe  
-✅ It accepts all 5 parameters correctly  
-✅ You've generated tags for different recipients  
-✅ The style changes based on the `tag_style` parameter  
-✅ You understand how parameters make recipes reusable
-
-**The "Aha!" Moment:** Any repetitive task with variation (reports, emails, documents, tags) can become a parameterized recipe. Build the template once, use it forever with different inputs. 🚀
+✅ A working `gift-tag-generator.yaml` recipe  
+✅ All required parameters  
+✅ Logic that adapts layout, styling, content, and poem  
+✅ Working QR code embedding  
+✅ Print-ready HTML output  
+✅ At least **3 generated tags**
