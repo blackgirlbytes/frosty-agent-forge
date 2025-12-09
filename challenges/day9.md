@@ -122,18 +122,6 @@ recipient_preferences:
   language: "English"
   tone: "heartfelt"
 gift_size: "medium"
-
----
-
-## Example Scenarios to Test
-
-### Scenario 1: The Volunteer (Simple)
-```yaml
-recipient_name: "Sarah Chen"
-gift_description: "Handmade scarf"
-sender_name: "Festival Committee"
-tag_style: "festive"
-include_poem: true
 ```
 ### Scenario 2: The Performer (Advanced)
 ```yaml
