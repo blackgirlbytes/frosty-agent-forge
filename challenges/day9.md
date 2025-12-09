@@ -97,7 +97,7 @@ When `include_poem: true`, poem must:
 - reference the **gift**  
 - fit the **style**  
 
-#### **6. Output **print-ready HTML**
+#### **6. Output print-ready HTML**
 This means:
 - Valid HTML structure  
 - Inline CSS  
