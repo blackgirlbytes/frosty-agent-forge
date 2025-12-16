@@ -1,4 +1,4 @@
-# Day 14: The Festival Mascot Crisis 🎭⛄
+# Day 12: The Festival Mascot Crisis 🎭⛄
 
 ## Welcome Back, AI Engineer
 
