@@ -24,7 +24,7 @@ interface GitHubFileResponse {
  * Get the current email-list.json from GitHub
  */
 async function getEmailList(): Promise<{ signups: Signup[]; sha: string }> {
-  const token = process.env.GITHUB_PAT;
+  const token = process.env.AUTO_PAT || process.env.GITHUB_PAT;
   
   if (!token) {
     throw new Error('GITHUB_PAT environment variable not set');
@@ -57,7 +57,7 @@ async function getEmailList(): Promise<{ signups: Signup[]; sha: string }> {
  * Update email-list.json on GitHub
  */
 async function updateEmailList(signups: Signup[], sha: string, commitMessage: string): Promise<void> {
-  const token = process.env.GITHUB_PAT;
+  const token = process.env.AUTO_PAT || process.env.GITHUB_PAT;
   
   if (!token) {
     throw new Error('GITHUB_PAT environment variable not set');
