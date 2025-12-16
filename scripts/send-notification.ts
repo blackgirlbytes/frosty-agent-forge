@@ -264,10 +264,8 @@ function getChallengeUnlockTemplate(day: number, recipientEmail: string): EmailT
         
         <div class="footer">
           <p>Happy coding! See you tomorrow for the next challenge! ❄️</p>
-          <p style="margin-top: 20px; font-size: 12px;">
-            You're receiving this because you signed up for <a href="https://adventofai.dev" style="color: #6b7280; text-decoration: none;">Advent of AI</a> challenge notifications.
-            <br>
-            <a href="${unsubscribeUrl}" style="color: #9ca3af; text-decoration: underline;">Unsubscribe</a>
+          <p style="margin-top: 20px; font-size: 12px; color: #6b7280;">
+            Don't need these email reminders? <a href="${unsubscribeUrl}" style="color: #9ca3af; text-decoration: underline;">Unsubscribe</a>
           </p>
         </div>
       </div>
