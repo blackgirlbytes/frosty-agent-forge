@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyUnsubscribeToken } from '@/lib/unsubscribe';
-import { unsubscribeEmail, getSignupByEmail } from '@/lib/db';
+
+// Dynamic import to avoid database initialization at build time
+async function getDbFunctions() {
+  const db = await import('@/lib/db');
+  return {
+    unsubscribeEmail: db.unsubscribeEmail,
+    getSignupByEmail: db.getSignupByEmail,
+  };
+}
 
 /**
  * POST /api/unsubscribe
@@ -33,6 +41,9 @@ export async function POST(request: NextRequest) {
         { status: 403 }
       );
     }
+
+    // Get database functions
+    const { getSignupByEmail, unsubscribeEmail } = await getDbFunctions();
 
     // Check if email exists
     const signup = getSignupByEmail(decodedEmail);
@@ -104,6 +115,9 @@ export async function GET(request: NextRequest) {
         { status: 403 }
       );
     }
+
+    // Get database functions
+    const { getSignupByEmail } = await getDbFunctions();
 
     // Check if email exists and its status
     const signup = getSignupByEmail(decodedEmail);
