@@ -10,6 +10,7 @@
 
 import sgMail from '@sendgrid/mail';
 import { getSubscribedEmails, getSignupStats } from '../src/lib/db';
+import { generateUnsubscribeUrl } from '../src/lib/unsubscribe';
 import * as dotenv from 'dotenv';
 import { execSync } from 'child_process';
 import { readFileSync, existsSync } from 'fs';
@@ -104,13 +105,17 @@ function getChallengePreview(day: number): { title: string; greeting: string; de
 
 /**
  * Get email template for challenge unlock notification
+ * Now accepts recipientEmail to generate personalized unsubscribe link
  */
-function getChallengeUnlockTemplate(day: number): EmailTemplate {
+function getChallengeUnlockTemplate(day: number, recipientEmail: string): EmailTemplate {
   const { title, greeting, description } = getChallengePreview(day);
   
   const subject = day === 1 
     ? '🎄 Day 1 Challenge is Live - Advent of AI!' 
     : `🎄 Day ${day} Challenge Unlocked - Advent of AI!`;
+
+  // Generate personalized unsubscribe URL for this recipient
+  const unsubscribeUrl = generateUnsubscribeUrl(recipientEmail);
 
   // Convert description paragraphs to HTML paragraphs
   const descriptionHtml = description
@@ -261,6 +266,8 @@ function getChallengeUnlockTemplate(day: number): EmailTemplate {
           <p>Happy coding! See you tomorrow for the next challenge! ❄️</p>
           <p style="margin-top: 20px; font-size: 12px;">
             You're receiving this because you signed up for <a href="https://adventofai.dev" style="color: #6b7280; text-decoration: none;">Advent of AI</a> challenge notifications.
+            <br>
+            <a href="${unsubscribeUrl}" style="color: #9ca3af; text-decoration: underline;">Unsubscribe</a>
           </p>
         </div>
       </div>
@@ -384,15 +391,16 @@ async function sendNotifications(day: number = 1, useRailway: boolean = false, u
     return;
   }
 
-  // Get email template
-  const template = getChallengeUnlockTemplate(day);
-
   // Send emails (with rate limiting to avoid SendGrid limits)
+  // Each email gets a personalized template with unique unsubscribe link
   let sent = 0;
   let failed = 0;
 
   for (const email of emails) {
     try {
+      // Generate personalized template with unsubscribe link for this recipient
+      const template = getChallengeUnlockTemplate(day, email);
+      
       await sgMail.send({
         to: email,
         from: fromEmail,
