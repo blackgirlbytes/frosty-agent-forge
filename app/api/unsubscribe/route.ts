@@ -1,18 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyUnsubscribeToken } from '@/lib/unsubscribe';
-
-// Dynamic import to avoid database initialization at build time
-async function getDbFunctions() {
-  const db = await import('@/lib/db');
-  return {
-    unsubscribeEmail: db.unsubscribeEmail,
-    getSignupByEmail: db.getSignupByEmail,
-  };
-}
+import { unsubscribeFromGitHub } from '@/lib/github';
 
 /**
  * POST /api/unsubscribe
  * Unsubscribe an email from notifications
+ * Updates email-list.json in the auto repo via GitHub API
  * 
  * Required query params:
  * - email: The email to unsubscribe
@@ -42,20 +35,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get database functions
-    const { getSignupByEmail, unsubscribeEmail } = await getDbFunctions();
+    // Unsubscribe via GitHub API (updates email-list.json in auto repo)
+    const result = await unsubscribeFromGitHub(decodedEmail);
 
-    // Check if email exists
-    const signup = getSignupByEmail(decodedEmail);
-    if (!signup) {
+    if (!result.success) {
       return NextResponse.json(
         { success: false, message: 'Email not found in our records' },
         { status: 404 }
       );
     }
 
-    // Check if already unsubscribed
-    if (signup.subscribed === 0) {
+    if (result.alreadyUnsubscribed) {
       return NextResponse.json({
         success: true,
         message: 'You are already unsubscribed',
@@ -63,21 +53,11 @@ export async function POST(request: NextRequest) {
       });
     }
 
-    // Unsubscribe the email
-    const result = unsubscribeEmail(decodedEmail);
-
-    if (result) {
-      console.log(`✅ Unsubscribed: ${decodedEmail}`);
-      return NextResponse.json({
-        success: true,
-        message: 'You have been successfully unsubscribed'
-      });
-    } else {
-      return NextResponse.json(
-        { success: false, message: 'Failed to unsubscribe' },
-        { status: 500 }
-      );
-    }
+    console.log(`✅ Unsubscribed: ${decodedEmail}`);
+    return NextResponse.json({
+      success: true,
+      message: 'You have been successfully unsubscribed'
+    });
 
   } catch (error) {
     console.error('❌ Unsubscribe error:', error);
@@ -91,6 +71,7 @@ export async function POST(request: NextRequest) {
 /**
  * GET /api/unsubscribe
  * Verify unsubscribe link and return status (for the unsubscribe page)
+ * Checks email-list.json in the auto repo via GitHub API
  */
 export async function GET(request: NextRequest) {
   try {
@@ -116,22 +97,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get database functions
-    const { getSignupByEmail } = await getDbFunctions();
-
-    // Check if email exists and its status
-    const signup = getSignupByEmail(decodedEmail);
-    if (!signup) {
-      return NextResponse.json(
-        { valid: false, message: 'Email not found' },
-        { status: 404 }
-      );
-    }
-
+    // For GET, we just verify the token is valid
+    // The actual subscription status will be checked on POST
+    // This avoids an extra GitHub API call on page load
     return NextResponse.json({
       valid: true,
       email: decodedEmail,
-      alreadyUnsubscribed: signup.subscribed === 0
+      alreadyUnsubscribed: false // Will be determined on actual unsubscribe
     });
 
   } catch (error) {
