@@ -1,0 +1,44 @@
+name: Test Unsubscribe Email
+
+on:
+  workflow_dispatch:
+    inputs:
+      email:
+        description: 'Email address to send test to'
+        required: true
+        default: 'rizel@block.xyz'
+
+jobs:
+  send-test-email:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Send test email
+        env:
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+          FROM_EMAIL: ${{ secrets.FROM_EMAIL }}
+          UNSUBSCRIBE_SECRET: ${{ secrets.UNSUBSCRIBE_SECRET }}
+        run: |
+          echo "📧 Sending test unsubscribe email to: ${{ github.event.inputs.email }}"
+          npx tsx scripts/test-unsubscribe-email.ts "${{ github.event.inputs.email }}"
+      
+      - name: Summary
+        if: success()
+        run: |
+          echo "## ✅ Test Email Sent" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**To:** ${{ github.event.inputs.email }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Check your inbox and test the unsubscribe link!" >> $GITHUB_STEP_SUMMARY
