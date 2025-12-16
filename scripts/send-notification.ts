@@ -264,8 +264,8 @@ function getChallengeUnlockTemplate(day: number, recipientEmail: string): EmailT
         
         <div class="footer">
           <p>Happy coding! See you tomorrow for the next challenge! ❄️</p>
-          <p style="margin-top: 20px; font-size: 12px; color: #6b7280;">
-            Don't need these email reminders? <a href="${unsubscribeUrl}" style="color: #9ca3af; text-decoration: underline;">Unsubscribe</a>
+          <p style="margin-top: 20px; font-size: 14px; color: #4b5563;">
+            Don't need these email reminders? <a href="${unsubscribeUrl}" style="color: #374151; text-decoration: underline;">Unsubscribe</a>
           </p>
         </div>
       </div>
