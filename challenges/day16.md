@@ -12,6 +12,16 @@ The Festival Director wants a simple, beautiful countdown app that shows:
 
 **Your mission:** Build a countdown app using `.goosehints` combined with one or more planning approaches of your choice.
 
+---
+
+## 💳 Need LLM Credits?
+
+Sign up at [goose-credits.dev](http://goose-credits.dev/) to get free credits for Claude Sonnet 4.5 via OpenRouter.
+
+**Use the ACCESS CODE:** `ADVENTDAY16`
+
+---
+
 ## 🎯 The Challenge
 
 **Previous days:** You chatted with goose and built things organically
@@ -112,22 +122,16 @@ All using `.goosehints` and your chosen planning approach(es)!
 
 ## 📤 Share Your Work
 
-**Share:**
-- Screenshot/video of your countdown app
-- Your `.goosehints` file
-- Which planning approach(es) you chose and why
+**📮 Required:** Submit in the [Advent of AI Discussion](https://github.com/block/goose/discussions/categories/advent-of-ai) under **Day 16**.
 
-```
-Day 16 of #AdventOfAI complete! ⏰❄️
+**Accepted Formats:**
+- Screenshot of your app
+- Link to a blog post about your solution
+- Link to a video of you solving the problem
+- Link to your repo
+- Link to your application
 
-Built a festival countdown app with @goose_ai using:
-📄 .goosehints for project context
-📋 [your chosen approach(es)] for planning
-
-[screenshot/video]
-```
-
-Tag us on Discord (#adventofai), Twitter/X, YouTube, LinkedIn, or Bluesky!
+**Tag us:** [Discord](https://discord.gg/goose-oss) • [Twitter/X](https://x.com/goose_oss) • [YouTube](https://www.youtube.com/@goose-oss) • [LinkedIn](https://www.linkedin.com/company/goose-oss) • [Bluesky](https://bsky.app/profile/opensource.block.xyz)
 
 ---
 
