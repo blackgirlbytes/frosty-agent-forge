@@ -32,15 +32,15 @@ export const CHALLENGE_TITLES: Record<number, string> = {
   6: "Day 6: The Festival Feedback System 🎪💬",
   7: "Day 7: The Lost & Found Data Detective 🔍🧤",
   8: "Day 8: Dmitri's Data Dilemma 🤓📱",
-  9: "Day 9: The Gift Tag Dilemma 🎁",
+  9: "Day 9: The Gift Tag Dilemma 🎁✨",
   10: "Day 10: The Festival Poster Generator 🎨📢",
-  11: "Day 11: The Social Media Blitz 📱✨",
-  12: "Day 12: The Festival Gossip Column 📰☕",
-  13: "Day 13: The Fun House Photo Booth 📸✨",
-  14: "Day 14: The Festival Mascot Crisis 🎭☃️",
-  15: "Day 15: The Festival Performance Mystery 🔍⚡",
-  16: "Day 16: The Festival Countdown App ⏰❄️",
-  17: "Day 17: The Winter Wishlist App 🎁✨",
+  11: "Day 11: The Fun House Photo Booth 📸✨",
+  12: "Day 12: The Festival Mascot Crisis 🎭⛄",
+  13: "Day 13: The Festival Staff Scheduling Crisis 📅⚡",
+  14: "Day 14: TBD",
+  15: "Day 15: TBD",
+  16: "Day 16: TBD",
+  17: "Day 17: TBD",
 };
 
 /**
