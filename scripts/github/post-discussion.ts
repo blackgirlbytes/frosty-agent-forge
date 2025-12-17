@@ -1,5 +1,6 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { CHALLENGE_TITLES } from '../../src/lib/challenge-utils';
 
 interface GraphQLResponse {
   data?: {
@@ -44,27 +45,6 @@ if (!DISCUSSION_CATEGORY_ID) {
 }
 
 const [OWNER, REPO] = TARGET_REPOSITORY.split('/');
-
-// Challenge metadata
-const CHALLENGE_TITLES = [
-  "Day 1: The Fortune Teller's Tent ⛄️",
-  "Day 2: The Storyteller's Booth 🎪📖",
-  "Day 3: The Hot Cocoa Championship Crisis 🏆☕",
-  "Day 4: The Festival Website Launch 🌐❄️",
-  "Day 5: The Homecoming Board ✈️❄️",
-  "Day 6: The Festival Feedback System 🎪💬",
-  "Day 7: The Lost & Found Data Detective 🔍🧤",
-  "Day 8: Dmitri's Data Dilemma 🤓📱",
-  "Day 9: The Gift Tag Dilemma 🎁",
-  "Day 10: The Festival Poster Generator 🎨📢",
-  "Day 11: The Social Media Blitz 📱✨",
-  "Day 12: The Festival Gossip Column 📰☕",
-  "Day 13: The Fun House Photo Booth 📸✨",
-  "Day 14: The Festival Mascot Crisis 🎭☃️",
-  "Day 15: The Festival Performance Mystery 🔍⚡",
-  "Day 16: The Festival Countdown App ⏰❄️",
-  "Day 17: The Winter Wishlist App 🎁✨",
-];
 
 async function graphqlRequest(query: string, variables: Record<string, unknown>): Promise<GraphQLResponse> {
   const response = await fetch('https://api.github.com/graphql', {
@@ -304,7 +284,7 @@ async function main() {
   console.log(`✅ Category ID: ${categoryId}`);
 
   // Create discussion
-  const title = CHALLENGE_TITLES[dayNum - 1];
+  const title = CHALLENGE_TITLES[dayNum];
   console.log(`\n📝 Creating discussion: "${title}"`);
   
   const discussion = await createDiscussion(
