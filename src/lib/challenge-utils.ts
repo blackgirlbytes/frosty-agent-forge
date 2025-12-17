@@ -38,8 +38,8 @@ export const CHALLENGE_TITLES: Record<number, string> = {
   12: "Day 12: The Festival Mascot Crisis 🎭⛄",
   13: "Day 13: The Festival Staff Scheduling Crisis 📅⚡",
   14: "Day 14: TBD",
-  15: "Day 15: TBD",
-  16: "Day 16: TBD",
+  15: "Day 15: The Festival Countdown App ⏰❄️",
+  16: "Day 16: The Festival Countdown App ⏰❄️",
   17: "Day 17: TBD",
 };
 
