@@ -1,3 +1,4 @@
+
 # Day 13: The Festival Staff Scheduling Crisis 📅⚡
 
 **Welcome Back, AI Engineer**
@@ -55,6 +56,21 @@ Follow the [goose Terminal Integration Guide](https://block.github.io/goose/docs
 Sign up at [goose-credits.dev](https://goose-credits.dev) to get free credits for Claude Sonnet 4.5 via OpenRouter!
 
 **Use the ACCESS CODE: ADVENTDAY13**
+
+## 🪄 The Magic of Terminal Integration
+
+Here's what makes `@goose` different from `goose run` - **it sees your terminal history**.
+
+**Try this:**
+```bash
+# First, look at the file
+cat staff_notes.txt
+
+# Now ask goose - don't mention the file name!
+@goose "who here can work Wednesday?"
+```
+
+Notice you didn't have to say "in staff_notes.txt" - goose already saw you looking at it!
 
 ## 🎯 What You'll Help Marcus Build
 
@@ -128,7 +144,6 @@ By the end, Marcus will have:
 **Essential Reading:**
 - [goose Terminal Integration Guide](https://block.github.io/goose/docs/guides/terminal-integration/) - Complete setup and usage
 - [goose Documentation](https://block.github.io/goose/) - Full reference
-- [Terminal Integration Examples](https://block.github.io/goose/docs/guides/terminal-integration/#usage) - Real usage patterns
 
 ## ✅ Success Criteria
 
