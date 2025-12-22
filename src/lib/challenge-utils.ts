@@ -40,7 +40,7 @@ export const CHALLENGE_TITLES: Record<number, string> = {
   14: "Day 14: The Festival Operations Manual 📚✨",
   15: "Day 15: The Social Media Blitz 📱✨",
   16: "Day 16: The Festival Countdown App ⏰❄️",
-  17: "Day 17: TBD",
+  17: "Day 17: The Winter Wishlist App 🎄✨",
 };
 
 /**
