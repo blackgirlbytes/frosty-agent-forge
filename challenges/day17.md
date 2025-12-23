@@ -138,6 +138,7 @@ Sign up at [goose-credits.dev](http://goose-credits.dev/) to get free credits fo
 ### Advanced ⭐⭐⭐
 
 * **Make it a ChatGPT App** using the [ChatGPT Apps SDK](https://developers.openai.com/apps-sdk)  
+     > ⚠️ **Note:** Creating and running a ChatGPT App requires a **paid ChatGPT account** to enable Developer Mode.  
 * Same MCP server works in BOTH goose AND ChatGPT  
 * Experience the "build once, run anywhere" magic of MCP  
 * [See example](https://x.com/gching/status/1988250074850488715) of cross-platform MCP apps
